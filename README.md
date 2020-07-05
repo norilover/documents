@@ -4,7 +4,7 @@
   * Git/
     * gitUsgae.md
 * Eclipse-cpp的环境配置
-  * ElipseCpp/
+  * EclipseCpp/
     * environmentConfig.md
 * 
 

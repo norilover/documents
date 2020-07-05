@@ -51,8 +51,9 @@
 
 * Q&A
 
-  ```
+  ```tex
   1、输入git commit -c "comment"
+  Q:
       $ git commit
   
       *** Please tell me who you are.
@@ -66,8 +67,15 @@
       Omit --global to set the identity only in this repository.
   
       fatal: unable to auto-detect email address (got 'Nori@DESKTOP-BAVDO0M.(none)')
+  A:
+	# 在shell中输入：
+  	git config --global user.email hhhwzc_17@126.com
+  	git config --global user.name norilover
+  	# 可通过下面查看
+  	# git config --global user.email
+  	# git config --global user.name
   
   ```
-
+  
   
 
