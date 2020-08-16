@@ -32,6 +32,14 @@
 	    Shift + F12: 合并展开所有代码块
 	    Ctrl + F3: 前往下一行
 	    Ctrl + Shift + F3: 前往上一行
+	    
+	Debug:
+		单步调试（Next line）：F7
 	
+		可以打断点，执行debugger中start/continue   F8   //执行到断点
+		
+		条到下一个断点：F4
+	
+		stop debugger:shift+F8
 	 ```
 
