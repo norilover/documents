@@ -47,6 +47,21 @@
   git push -u origin master
   ```
 
+* fast-forward
+
+  ```
+  当多个用户提交本地改变时，第二个提交的用户将会在push时出现下面的【问题】
+  	! [rejected]        master -> master (fetch first)
+  error: failed to push some refs to 'git@github.com:norilover/documents.git'
+  
+  【原因】
+  	在remote的repository上只保留一个master的HEAD指针，当A用户push后，HEAD指针指向“HEAD_A", 此时B用户push就会出现上面的问题
+  
+  【解决办法】
+  	git pull 将remote repository中的改变拉到本地，如果存在conflict先解决conflict
+  
+  ```
+
   
 
 * Q&A
@@ -68,7 +83,7 @@
   
       fatal: unable to auto-detect email address (got 'Nori@DESKTOP-BAVDO0M.(none)')
   A:
-	# 在shell中输入：
+  # 在shell中输入：
   	git config --global user.email hhhwzc_17@126.com
   	git config --global user.name norilover
   	# 可通过下面查看
@@ -76,6 +91,6 @@
   	# git config --global user.name
   
   ```
-  
+
   
 
