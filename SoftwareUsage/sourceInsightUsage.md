@@ -36,6 +36,16 @@
   5、进入项目点击源代码的某一文件， 右键点击File Name 栏下的内容，选择Synchronize Files,点击确认更新文件索引
   ```
 
+* 快捷键
+
+  ```
+  ALT + , : Go Back
+  	  . : Go Forward 
+  	
+  CTRL + = : Go Definition
+  
+  ```
+
   
 
 
