@@ -114,11 +114,6 @@ Char c = (Char)temp;
 
 ```
 
-* Delegate
-
-```c#
-
-```
 
 * Properties(Get, Set function)
 
@@ -592,6 +587,35 @@ public void test02(){
 }
 ```
 
+* C Plus Plus's pointer of function compare to  C Sharp's delegate function
+
+```c++
+public class{
+    public:
+    	bool delegateVar1(String str, (int *) func(string str)){
+            //
+        }
+     	int delegateVar2(String str{
+            //
+        }   
+	private:
+    	(bool *) var;
+    	 
+    	(int *) var1;
+    	
+    
+    	main(){
+            var1 v1 = delegateVar2("nori");
+            var v2 = delegateVar1("nori", v1);
+            var();
+        }
+    
+    	for(auto v : vector<>){
+            //
+        }
+}
+```
+
 * Lambda Expression 
 
 ```c#
@@ -751,37 +775,6 @@ ref : can be read or written
 out : can be written.
 ```
 
-
-
-* C Plus Plus(*)
-
-```c++
-public class{
-    public:
-    	bool delegateVar1(String str, (int *) func(string str)){
-            //
-        }
-     	int delegateVar2(String str{
-            //
-        }   
-	private:
-    	(bool *) var;
-    	 
-    	(int *) var1;
-    	
-    
-    	main(){
-            var1 v1 = delegateVar2("nori");
-            var v2 = delegateVar1("nori", v1);
-            var();
-        }
-    
-    	for(auto v : vector<>){
-            //
-        }
-}
-```
-
 * typeof
 
 ```c#
@@ -804,7 +797,7 @@ public class Example
 }
 ```
 
-* Ex
+* Related Clause Learning
 
 ```c#
 
@@ -828,7 +821,7 @@ public class Example
 
 
 
-* Linq
+* Linq Clause
 
 ```c#
 using System.Linq
