@@ -229,9 +229,13 @@ public class SomeClass
 }
 ```
 
-* Hide Function
+* Hide Function(new modifier)
 
 ```c#
+/* 
+	When used as a declaration modifier, the new keyword explicitly hides a member that is inherited from a base
+class.When you hidean inherited member, the derived version of the member replaces the baseclass version
+*/
 ...main(){
     // test
     Human human = new Human();
@@ -272,7 +276,12 @@ public class Player : Human
     }
 }
 
-
+/*
+override and new :
+	It is an error to use both new and override on thesame member, becausethetwo modifiers have mutually
+exclusive meanings.The new modifier creates a new member with thesame nameand causes the original
+member to become hidden.The override modifier extends theimplementation for an inherited member.
+*/
 ```
 
 * Overriding
