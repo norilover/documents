@@ -540,7 +540,7 @@ public class TestDelegate
         MyDelegateTemp += DelegateTwo<int>;
         
         // 3.Delegate a anonymous method
-        MyDelegateTemp += delegate int(int parameter){
+        MyDelegateTemp += delegate (int parameter){
             Console.WriteLine("Anonymous Method");
             Debug.Log("Anonymous Method");
         	return parameter
@@ -587,7 +587,7 @@ public void test02(){
 }
 ```
 
-* C Plus Plus's pointer of function compare to  C Sharp's delegate function
+* Delegates are similar to function pointers in C++
 
 ```c++
 public class{
@@ -615,6 +615,69 @@ public class{
         }
 }
 ```
+
+* The delegate type
+
+```c#
+// In .NET, System.Action and System.Func types provide generic definitions for many common delegates.
+namespace System
+{
+    public delegate void Action();
+}
+
+namespace System
+{
+    public delegate TResult Func<out TResult>();
+}
+
+namespace System
+{
+    public delegate TResult Func<in T1, in T2, out TResult>(T1 arg1, T2 arg2);
+}
+
+...main(){
+    // Syste.Action
+    // The three can implement the same effect
+    System.Action noriAction = () => { }; 
+    noriAction = delegate{}; 
+    noriAction = Test01;
+    
+    // System.Func
+    // The three can implement the same effect
+    Func<string, string> selector = str => str.ToUpper();
+    selector = delegate (string str){ return str.ToUpper(); }
+    selector = MyToUpper
+
+    // Create an array of strings.
+    string[] words = { "orange", "apple", "Article", "elephant" };
+    // Query the array and select strings according to the selector method.
+    IEnumerable<String> aWords = words.Select(selector);
+
+    // Output the results to the console.
+    foreach (String word in aWords)
+        Console.WriteLine(word);
+
+    /*
+    This code example produces the following output:
+
+    ORANGE
+    APPLE
+    ARTICLE
+    ELEPHANT
+
+    */
+    
+}
+public void Test01(){
+    // balabala
+}
+
+public string MyToUpper(String str){
+    return str.ToUpper();
+}
+```
+
+
 
 * Lambda Expression 
 
