@@ -456,6 +456,18 @@ namespace NoriSpace
         KeyValuePair<string, int> keyValuePair = (KeyValuePair<string, int>)iterator01.Current;
         Console.WriteLine("Key: " + keyValuePair.Key + ", Value: " + keyValuePair.Value + "\n");
     }
+    
+    // Dictionary isn't add the same key if that, the progran will throw a exception
+    string[] nameArr = {"Tom", "Jerry", "Nori"};
+    foreach(var v in nameArr){
+       if(dictionary.containsKey("Nori")){
+            dictionary["Nori"] = 25;
+            continue;
+        }     
+        // dictionary[v] = 25;
+        dictionary.Add(v, 25);
+    }
+
 }
 ```
 
@@ -534,7 +546,7 @@ https://learn.unity.com/tutorial/quaternions?uv=2019.3&projectId=5c88f2c1edbc2a0
 public class TestDelegate
 {
     public delegate void MyDelagate<T>(T parameter);
-    private MyDelagate MyDelagateTemp;
+    private MyDelagate<int> MyDelagateTemp;
     ..main()
     {
 		MyDelagateTemp = DelegateOne;
@@ -558,6 +570,7 @@ public class TestDelegate
         // Output DelegateOne()
         // Output DelegateTwo()
         MyDelegateTemp();
+        MyDelegateTemp
     }
     
     public int DelegateOne(int parameter)
@@ -625,6 +638,7 @@ public class{
 }
 ```
 
+* 
 * The delegate type
 
 ```c#
@@ -632,6 +646,10 @@ public class{
 namespace System
 {
     public delegate void Action();
+    
+    Action action = delegate (){
+        
+    }
 }
 
 namespace System
