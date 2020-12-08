@@ -206,6 +206,21 @@ $ vim protocols
 
 
 
+* 命令替换
+
+```shell
+:`s/old_str/new_str/g`
+:`s/#1,#2sold_str/new_str/g`
+将old_str的内容换成new_str
+paramter :
+    #1 : the time more than or equal to #1 that old_str occur
+    #2 : the time less than or equal to #2 that old_str occur
+	g  : means to substitute globally in the line
+	c  : means to substitute including the content of comment
+```
+
+
+
 * 快速查找
 
 普通模式下输入 `/` 然后键入需要查找的字符串 按回车后就会进行查找。 `？` 与`/` 功能相同，只不过 `？` 是向上而 `/` 是向下查找。 进入查找之后，输入`n` 和 `N` 可以继续查找。 `n`是查找下一个内容,`N`查找上一个内容。
