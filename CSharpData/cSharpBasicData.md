@@ -74,6 +74,23 @@ foreach (var s in queryLowNums)
 }
 ```
 
+* new
+
+```c#
+// 1.The new constraint specifies that a type arguments in a generic class declaration must have a public parameterless constructor. To use the new constraint, the type cnanot be abstract.
+class Factory<T> where T : new(){
+    public T GetFactory(){
+        return new T();
+    }
+}
+// 2.When use the new() constraint with others, it must be specified last
+public class Factory<T> where T : IComparable, new(){
+    
+}
+```
+
+
+
 * lock
 
 ```c#
@@ -476,6 +493,17 @@ namespace NoriSpace
 ```c#
 // Can to judge the class' detail type 
 // the same effect java's instanceof
+/*
+Usage Formate: 
+	expr is type varname
+
+	The is expression is true if expr isn't null, and any of the following conditions is true:
+
+    1.expr is an instance of the same type as type.
+    2.expr is an instance of a type that derives from type. In other words, the result of expr can be upcast to an instance of type.
+    3.expr has a compile-time type that is a base class of type, and expr has a runtime type that is type or is derived from type. The compile-time type of a variable is the variable's type as defined in its declaration. The runtime type of a variable is the type of the instance that is assigned to that variable.
+    4.expr is an instance of a type that implements the type interface.
+*/
 ...main(){
     Object ob = new String(10);
     String str = Test(ob);
@@ -488,12 +516,14 @@ namespace NoriSpace
 }
 
 ...String Test(Object ob){
-    if(ob is String){
-        return ob + " Nori"
+	// expr is type varname
+    if(ob is String localStr){
+        return localStr + " Nori"
     }else{
         return "Empty";
     }    
 }
+
 
 ```
 
