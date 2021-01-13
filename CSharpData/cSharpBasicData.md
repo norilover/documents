@@ -91,17 +91,6 @@ public class Factory<T> where T : IComparable, new(){
 
 
 
-* lock
-
-```c#
-// The lock statement acquires the mutual-exclusion lock for a given object, executes a statement block, and then releases the lock.
-// While a lock is held, the thread that holds the lock can again acquire and release the lock, Any other thread is blocked from acquring the lock and waits until the lock is released
-object x;
-lock(x)
-{
-    
-}
-```
 
 * as
 
@@ -1090,3 +1079,19 @@ yyyy	4 digit year	2007
 }
 ```
 
+
+
+> 锁机制
+
+* lock
+
+```c#
+// The lock statement acquires the mutual-exclusion lock for a given object, executes a statement block, and then releases the lock.
+// While a lock is held, the thread that holds the lock can again acquire and release the lock, Any other thread is blocked from acquring the lock and waits until the lock is released
+// where x is an expression of a reference type. It's precisely equivalent to
+object x;
+lock(x)
+{
+    
+}
+```

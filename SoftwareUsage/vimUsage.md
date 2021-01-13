@@ -97,6 +97,20 @@
 | `t<字母>` | 向后搜索<字母>并跳转到第一个匹配位置之前的一个字母(不常用) |
 | `T<字母>` | 向前搜索<字母>并跳转到第一个匹配位置之后的一个字母(不常用) |
 
+* 搜索设置
+
+```
+set key_str
+
+key_str :
+	ic   : ignore case
+	is   : incsearch, show partial matches for a search phrase
+	hls  : highlight search
+	noic : to switch an option off
+```
+
+
+
 * 复制及粘贴文本
 
 ```
