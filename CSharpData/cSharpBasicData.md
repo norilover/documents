@@ -78,12 +78,16 @@ foreach (var s in queryLowNums)
 
 ```c#
 // 1.The new constraint specifies that a type arguments in a generic class declaration must have a public parameterless constructor. To use the new constraint, the type cnanot be abstract.
+// where T : new() 表示 T可以被new出来，而对于抽象类接口是不能被new出来的，所以T一定不是抽象类和接口,(where的用法请看上面)
 class Factory<T> where T : new(){
     public T GetFactory(){
+        
+        // 如果没有上面的 这里将不能使用 new
         return new T();
     }
 }
 // 2.When use the new() constraint with others, it must be specified last
+// 如果where后面有多个限定，必须将new()放在最后
 public class Factory<T> where T : IComparable, new(){
     
 }
@@ -98,24 +102,73 @@ public class Factory<T> where T : IComparable, new(){
 // 1.The as operator explicitly converts the result of an expression ti a given reference or nullable value type. 
 // 2.If the conversion is not possiable, the as operator returns null. 
 // 3.Unlike a cast expression, the as operator never throws an exception.
+/*
+	as 可以显式的对“引用类型”的变量进行转换，（这也就说明对于“基本类型”是不能用as进行类型转换的），传统的方法我们之间使用类似这样的表达式进行强转如下
+	eg.
+	// 基本数据类型（存放在栈中，没有new的结构体也是存放在栈中）
+		int integer = 10;
+		// 显式转换
+		double doub1 = (double)integer;
+		
+		// 隐式转换（系统默认可以将低精度的类型转换为高精度的类型，只要数据没有缺失，系统就可以自动进行转换）
+		double doub2 = integer;
+		
+	// 引用类型（实际是一个句柄，指向堆中的一块内存）
+	class 爸爸{
+		string name;
+	}
+	class 孩子{
+		// 改方法在爸爸类中没有
+		public void 孩子方法(){}
+	}
+	
+	...main(){
+		爸爸 fa = new 孩子();
+        
+        // 只能调用爸爸类中的方法
+        ...
+        
+        // 如果知道fa其实指向的是一个孩子类，那么可以这样
+        孩子 ch = (孩子)fa;
+        孩子 ch1 = fa as 孩子;
+        
+        // 可以正常的调用孩子方法
+        ch.孩子方法();
+        ch1.孩子方法();
+        
+        // 这里主要说说这两种的区别
+        
+        // 若实际上fa指向的不是孩子类或则孩子类的子类，这样的转换将会报错
+        // 孩子 ch = (孩子)fa;
+        
+        // 若实际上fa指向的不是孩子类或则孩子类的子类，这样的转换ch1将会被赋值为null，而没有报错
+        // 孩子 ch1 = fa as 孩子;
+        
+	}
+*/
+
 
 // Uage of key word of as
+// 使用 as
 String str1 = "nori";
 Object temp = st1;
 
 // conversion
 
 // Right conversion
+// 正确的转换
 String st2 = temp as String;
 String st2 = (String)temp;
 
 // Error conversion
 // Use as
 // There is not error and not throw an exception, but c is given null
+// 错误的转换没有抛出异常，只是把c赋值为null
 Char c = temp as Char;
 
 //Use common way
 // There is error and will throw an exception
+// 传统做法，将会抛出异常
 Char c = (Char)temp;
 
 ```
@@ -141,6 +194,7 @@ public class Player
         {
             return experience;
             // also add some steps
+            // 也可以加一些运算操作返回
             // return experience / 100;
         }
         set
@@ -166,12 +220,15 @@ public class Analyze
         Player player02 = new Player();
         
 		// directly access the variable of enemyNumber
+		// 直接访问enemyNumber变量
         // output 4
+  		// 输出4
 		int totalNumber = CalUtil.plus(Enemy.enemyNumber, Player.playerNumber);
 	}
 }
 
 // Apply to common class
+// 在普通的类中使用
 public class Enemy
 {
 	public static int enemyNumber = 0;
@@ -192,6 +249,7 @@ public class Player
 }
 
 // Apply to Utility class
+// 在工具类中使用
 class CalUtil
 {
 	public static int plus(int num1, int num2){
@@ -217,6 +275,7 @@ public class Test
 
 
 // Apply to generic class
+// 在类上使用泛型
 public class GenericClass <T>
 {
     T item;
@@ -227,6 +286,7 @@ public class GenericClass <T>
 }
 
 // Apply to generic method
+// 在方法上使用泛型
 public class SomeClass
 {
     public T getGeneric<T>(T parameter){
@@ -241,6 +301,9 @@ public class SomeClass
 /* 
 	When used as a declaration modifier, the new keyword explicitly hides a member that is inherited from a base
 class.When you hidean inherited member, the derived version of the member replaces the baseclass version
+*/
+/*
+	当使用这个new修饰符时，它会显示的隐藏来自父类的部分，这里主要说继承自父类的方法，当方法被virtual修饰时可以被子类进行重写（override）
 */
 ...main(){
     // test
@@ -277,6 +340,7 @@ public class Enemy : Human
 // The extend class
 public class Player : Human
 {
+	// 不会与Human中的类产生冲突， 类似重载，但其实Human中Yell()方法没有被virtual修饰
 	new public void Yell(){
     	Console.WriteLine("Player Yell()");
     }
@@ -387,6 +451,7 @@ namespace NoriSpace
 ..main(){
     // Single value
     // List
+    // 通常的追加一个元素的方法
     List<int> listInt = new List<int>();
     listInt.Add(1);
     listInt.Add(2);
@@ -395,6 +460,7 @@ namespace NoriSpace
  
     /*
     // The other way
+    // 一次追加多个
     List<Int32> list = new List<int>
     {
         1,
@@ -404,6 +470,7 @@ namespace NoriSpace
     };*/
     
     // Traverse the value of listInt
+    // 
     Console.WriteLine("Element of listInt: \n");
 
     Console.WriteLine("Way1 \n");
@@ -554,7 +621,45 @@ public class TestCoroutine
 * Event
 
 ```c#
-https://learn.unity.com/tutorial/quaternions?uv=2019.3&projectId=5c88f2c1edbc2a001f873ea5#5c8945d0edbc2a14103553dc
+public class EventManager : MonoBehaviour 
+{
+    public delegate void ClickAction();
+    public static event ClickAction OnClicked;
+
+
+    void OnGUI()
+    {
+        if(GUI.Button(new Rect(Screen.width / 2 - 50, 5, 100, 30), "Click"))
+        {
+            if(OnClicked != null)
+                OnClicked();
+        }
+    }
+}
+using UnityEngine;
+using System.Collections;
+
+public class TeleportScript : MonoBehaviour 
+{
+    void OnEnable()
+    {
+        EventManager.OnClicked += Teleport;
+    }
+
+
+    void OnDisable()
+    {
+        EventManager.OnClicked -= Teleport;
+    }
+
+
+    void Teleport()
+    {
+        Vector3 pos = transform.position;
+        pos.y = Random.Range(1.0f, 3.0f);
+        transform.position = pos;
+    }
+}
 ```
 
 * Delegate
@@ -879,9 +984,73 @@ enum Season2
 
 ```c#
 params : 
-in  : can be read
-ref : can be read or written
-out : can be written.
+    in  : can be read
+        requires that the variable be initialized before it is passed	
+        EG.
+            void fun(in int number)
+            {
+                // Exception
+                // Only can be read
+                number += 44;
+            }
+            ...main(){
+
+                int num;
+                // Exception 
+                // Not be initialized
+                fun(num);
+            }
+            ...main(){
+
+                int num = 0;
+                // Exception
+                fun(num);
+            }
+            ...main(){
+
+                int num = 0;
+                // No exception
+                fun1(num);
+                Console.WriteLine(num);
+            }    
+
+    ref : can be read or written
+        requires that the variable be initialized before it is passed
+        EG.
+            void fun1(ref int number)
+            {
+                number += 44;
+            }
+            ...main(){
+
+                int num;
+                // Exception
+                fun1(num);
+                Console.WriteLine(num);
+            }
+            ...main(){
+
+                int num = 0;
+                // No exception
+                fun1(num);
+                Console.WriteLine(num);
+            }
+    out : can be written.
+        not requires that the variable be initialized before it is passed
+        EG.
+            void fun2(out int number)
+            {
+                number = 44;
+            }
+            ...main(){
+
+                int num, num1 = 0;
+                // No exception
+                fun1(num);
+                Console.WriteLine(num);
+                fun1(num1);
+                Console.WriteLine(num);
+            }
 ```
 
 * typeof
@@ -1089,9 +1258,294 @@ yyyy	4 digit year	2007
 // The lock statement acquires the mutual-exclusion lock for a given object, executes a statement block, and then releases the lock.
 // While a lock is held, the thread that holds the lock can again acquire and release the lock, Any other thread is blocked from acquring the lock and waits until the lock is released
 // where x is an expression of a reference type. It's precisely equivalent to
+/*
+
+*/
 object x;
 lock(x)
 {
+    // 临界区
     
 }
 ```
+
+
+
+> 协程
+>
+> 
+
+
+
+> 线程
+
+* Thread
+
+  ```c#
+  public class ThreadTest{
+      public static void Main(string[] args)
+      {
+          // Start thread have tow way
+          // 开启一个线程使用 两种方式
+          /*
+          	Thread thread new Thread(new ThreadStart(ThreadFunc));
+          	thread.Start();
+          	thread = new Thread(new ParameterizedThreadStart(ParameterlizedThreadFunc));
+          	thread.Start();
+          */
+          
+          // The function be used like above
+          // Way1
+          // General function expression
+          // 使用传统的函数声明的方式
+          Thread thread = new Thread(new ThreadStart(ThreadFunc));
+          thread.Start();
+          thread = new Thread(new ParameterizedThreadStart(ParameterlizedThreadFunc));
+          thread.Start();
+          // Way2
+          // delegate expression
+          // 使用委托的方式
+          // Thread threadD = new Thread(new ThreadStart(delegate { Console.WriteLine("Delegate without parameter"); }));
+          Thread threadD = new Thread(new ThreadStart(delegate () { Console.WriteLine("Delegate without parameter"); }));
+          Thread parameterizedThreadD = new Thread(delegate(object para)
+                                                   {
+                                                       Console.WriteLine("Delegate with parameter, and parameter is :" + para.ToString());
+                                                   });
+  
+          // Way3
+          // Lambda expression
+          // 使用lambda的方式
+          Thread threadL = new Thread(new ThreadStart(() =>
+                                                      {
+                                                          Console.WriteLine("Delegate without parameter");
+                                                      }));
+          Thread parameterizedThreadL = new Thread(new ParameterizedThreadStart((para) =>
+                                                                                {
+                                                                                    Console.WriteLine("Lambda with parameter, and parameter is :" + para.ToString());
+                                                                                }));
+      }
+  
+      /// <summary>
+      /// With parameter
+      /// 带参方法
+      /// </summary>
+      /// <param name="para"></param>
+      private static void ParameterlizedThreadFunc(object para)
+      {
+          Console.WriteLine("General function with parameter, and parameter is :" + para.ToString());
+      }
+      /// <summary>
+      /// Without parameter
+      /// 不带参方法
+      /// </summary>
+      private static void ThreadFunc()
+      {
+          Console.WriteLine("General function without parameter");
+      }
+  }
+  ```
+
+* Timer
+
+  ```c#
+  // Provides a mechanism for executing a method on a thread pool thread at specified intervals, This class cannot be inherited
+  // Use this constuctor, others like that
+  /* Timer类提供一种可以定时执行一个来自线程池的方法的机制，这里说的定时指的是以相同的时间间隔（interval）,主要的构造如下：
+  */
+  Timer(TimerCallback)
+  Timer(TimerCallback, Object, TimeSpan, TimeSpan) 
+      
+      
+  public class TimerTest{
+      private static void TimerCallback(object para)
+      {
+          Console.WriteLine("TimerCallback here, para is " + para.ToString());
+      }   
+  
+      ...main(){
+          // The parameter of be used in callback
+          // 用在回调中的参数
+          String str = "Nori";
+  
+          // The amount of time to delay before callback is invoked
+          // The time of the first start
+          // 第一个回调被执行的延迟时间
+          TimeSpan startDelayTime = new TimeSpan(0, 0, 5);
+  		
+          // The time interval between invocations of callback
+          // 每次回调被执行的时间间隔
+          TimeSpan intervalTime = new TimeSpan(0, 0, 10);
+          new Timer(TimerCallback, str, startDelayTime, intervalTime);
+      }
+  }
+  ```
+
+* Sort Data(排序数据)
+    ```c#
+    // for Collection
+    // 对于一般的集合
+    
+    /*
+    List 可以调用它的Sort()方法进行排序
+    构造函数：
+        List<T>()	
+        List<T>(IEnumerable<T>)	
+        List<T>(Int32)	
+        
+    Sort函数    
+        public void Sort(Comparison<T> comparison)
+        {
+          if (comparison == null)
+            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.match);
+          if (this._size <= 0)
+            return;
+          Array.Sort<T>(this._items, 0, this._size, (IComparer<T>) new Array.FunctorComparer<T>(comparison));
+        }
+        
+    SortSet 可以直接在new的时候传进去一个比较的方法
+    SortedSet<T>()	
+    
+    // 比较器 
+    SortedSet<T>(IComparer<T>)	
+    
+    SortedSet<T>(IEnumerable<T>)	
+    SortedSet<T>(IEnumerable<T>, IComparer<T>)	
+    SortedSet<T>(SerializationInfo, StreamingContext)
+    
+    var ss = new SortedSet<T>(Comparer<T>.Create((item1, item2) =>
+    {
+    	if(item1 > item2)
+    		return 1;
+    	else if(item1 == item2)
+    		return 0;
+    	}else{
+    		return -1;
+    	}
+    }));
+    */
+    ```
+    
+* Code Block & Static Black & Static Constructor function(代码块&静态代码块&静态构造方法)
+
+    ```c#
+    public class CodeAndStaticBlockInitSequence
+    {
+        private static string _generalName;
+        private static string _staticName;
+        private string _name;
+    
+        // No use this here, exception use in the method 
+        // 不能使用代码块，但可以在方法中使用这种格式
+        // {
+        //     // _name = "GeneralNori"; // Can't use this variable 
+        //     
+        //     // Just use the static variable
+        //     _generalName = "GeneralNori";
+        //     // Console.WriteLine("Call the general code block");
+        // }
+    
+    
+        /// <summary>
+        /// Call before the class loading
+        /// 静态构造函数，在类加载时就执行，只执行一次，内部只能使用静态类型
+        /// </summary>
+        static CodeAndStaticBlockInitSequence()
+        {
+            // _name = "GeneralNori"; // Can't use this variable 
+    
+            // Just use the static variable
+            _staticName = "StaticNori";
+            Console.WriteLine("Call the static code block");
+        }
+    
+        /// <summary>
+        /// Constructor that will call when use new key word to create this object
+        /// 普通的构造函数，每次声明这个类就会执行
+        /// </summary>
+        public CodeAndStaticBlockInitSequence()
+        {
+            _name = "ConstructorNori";
+    
+            Console.WriteLine("Call the constructor");
+    
+            Console.WriteLine("_name is : " + _name);
+            Console.WriteLine("_generalName is : " + _generalName);
+            Console.WriteLine("_staticName is : " + _staticName);
+        }
+    }
+    
+    
+    ...main(){
+        
+        //  打印"静态构造函数"中的内容， 不论是否执行下面的语句 
+        
+        
+        // 打印“普通的构造函数”中的内容   
+        CodeAndStaticBlockInitSequence c = new CodeAndStaticBlockInitSequence();
+        // 打印“普通的构造函数”中的内容
+        CodeAndStaticBlockInitSequence c1 = new CodeAndStaticBlockInitSequence();
+        
+        
+    }
+    ```
+    
+* using
+
+    ```c#
+    // Provides a convenient syntax that ensures the correct use of IDisposable objects. Beginning in C# 8.0, the using statement ensures the correct use of IAsyncDisposable objects.
+    // 提供一种便捷式的语法，确保流被正确的关闭
+    
+    // 固定的接口
+    public interface IDisposable
+    {
+        [__DynamicallyInvokable]
+        void Dispose();
+    }
+    
+    // 例如TextReader类，它就实现了 IDisposable
+    public abstract class TextReader : MarshalByRefObject, IDisposable{...}
+    
+    // 具体实现如下，其实就是回收这个（流）对象
+    [__DynamicallyInvokable]
+    public void Dispose()
+    {
+        this.Dispose(true);
+        GC.SuppressFinalize((object) this);
+    }
+    
+    // 一般我们使用完文件类，处理IO数据时，都会对调用Close(), 这里可以说明其实Close()是给用户提供的关闭流的方法，而Dispose()则是提供给系统或用户关闭流的方法
+    public virtual void Close()
+    {
+        this.Dispose(true);
+        GC.SuppressFinalize((object) this);
+    }
+    
+    
+    ...main{
+        
+        // 方法1
+        StreamReader sr = File.OpenText(path))
+        string s;
+        while ((s = sr.ReadLine()) != null)
+        {
+            Console.WriteLine(s);
+        }
+        // 关闭流
+        sr.Close();
+        
+        
+        // 方法2
+        // using 写法
+        using (StreamReader sr1 = File.OpenText(path))
+        {
+            s;
+            while ((s = sr1.ReadLine()) != null)
+            {
+                Console.WriteLine(s);
+            }
+        }
+    }
+    ```
+
+    
+
