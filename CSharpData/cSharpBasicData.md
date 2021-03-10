@@ -358,6 +358,7 @@ member to become hidden.The override modifier extends theimplementation for an i
 
 ```c#
 // Add key word of virtual when we neee to override a certain method 
+// 当我们需要重写某一个方法时候，我们一般在方法返回类型前添加virtual
 public class BaseClass
 {
     public virtual void BaseMehtod(){
@@ -400,16 +401,20 @@ public class ComparableTest : IComparable<int>
     String str02 = null;
     
     // Use the extension method
+    //   使用扩展方法
     str01.ExtendTool();
     // Output Nori Full
+    // 输出 Nori Full
     Console.WriteLine(str01);
     
     str02.ExtendTool();
     // Output Empty
+    // 输出 Empty
     Console.WriteLine(str02);    
 }
 
 // The Extension Method
+// 扩展方法
 public static class ExtendMethod{
 	public static void ExtendTool (this String str) {
         if(str == null){
@@ -543,6 +548,70 @@ namespace NoriSpace
 
 }
 ```
+
+* Union&Except&Intersect
+
+```
+Union : 并集
+Except ：差集
+Intersect : 交集
+```
+
+* Other Linq
+
+```c#
+// Determines whether all elements of a sequence satisfy a condition.
+public static bool All<TSource> (this System.Collections.Generic.IEnumerable<TSource> source, Func<TSource,bool> predicate);
+// EG.
+class Pet
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+public static void AllEx()
+{
+    // Create an array of Pets.
+    Pet[] pets = { new Pet { Name="Barley", Age=10 },
+                   new Pet { Name="Boots", Age=4 },
+                   new Pet { Name="Whiskers", Age=6 } };
+
+    // Determine whether all pet names
+    // in the array start with 'B'.
+    bool allStartWithB = pets.All(pet =>
+                                      pet.Name.StartsWith("B"));
+
+    Console.WriteLine(
+        "{0} pet names start with 'B'.",
+        allStartWithB ? "All" : "Not all");
+}
+
+// This code produces the following output:
+//
+//  Not all pet names start with 'B'.
+
+
+Contains<TSource>(IEnumerable<TSource>, TSource, IEqualityComparer<TSource>)
+// Determines whether a sequence contains a specified element.
+// EG.
+   string[] fruits = { "apple", "banana", "mango", "orange", "passionfruit", "grape" };
+
+string fruit = "mango";
+
+bool hasMango = fruits.Contains(fruit);
+
+Console.WriteLine(
+    "The array {0} contain '{1}'.",
+    hasMango ? "does" : "does not",
+    fruit);
+
+// This code produces the following output:
+//
+// The array does contain 'mango'.
+
+```
+
+
 
 * is
 
@@ -1423,6 +1492,163 @@ lock(x)
     	}
     }));
     */
+    
+    // EG.
+    public class Test
+    {
+        public static void Main(string[] args)
+        {
+            // 1.No implement comparer
+            List<PersonNoImp> listNoImp = new List<PersonNoImp>();
+    
+            //
+            // parameter1, parameter2, return
+            // 入参1，         入参2,        返回值
+            Func<PersonNoImp, PersonNoImp, int> comparerFunc = ComparerFunc; 
+    
+            listNoImp.Sort(comparerFunc.Invoke);
+            listNoImp.Sort(ComparerFunc);
+    
+            // 1.1.Way1
+            // public delegate int Comparison<in T>(T x, T y);
+            listNoImp.Sort(Comparer<PersonNoImp>.Create(comparerFunc.Invoke));
+            listNoImp.Sort(Comparer<PersonNoImp>.Create(ComparerFunc));
+    
+            // 1.1.Way2
+            listNoImp.Sort((x, y) =>
+                           {
+    
+                               /*
+                       return (int)comparerFunc?.Invoke(x, y);
+                       Same to:
+                       if(comparerFunc != null){
+                           return comparerFunc(x,y);
+                       }
+                     */
+                               return comparerFunc(x, y);
+                           });
+    
+            // 1.1.Way3
+            listNoImp.Sort(delegate(PersonNoImp x, PersonNoImp y)
+                           {
+                               return comparerFunc(x, y);
+                           });
+    
+    
+            // 2.Implement comparer
+            List<PersonImpComparer> listImpComparer = new List<PersonImpComparer>();
+            listImpComparer.Sort();
+    
+        }
+    
+        /// <summary>
+        /// Comparer function
+        /// 比较方法
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private static int ComparerFunc(PersonNoImp x, PersonNoImp y)
+        {
+            // Default is equaled
+            int result = 0;
+    
+            if ((result = x.Age.CompareTo(y.Age)) != 0)
+                return result;
+    
+            // x.Name.CompareTo(y.Name)
+            // In case of the null reference
+            // 这样写可以防止引用null报错
+            // 忽略大小写
+            // if ((result = string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase)) != 0)
+            // The default comparison
+            // 按照实际顺序，区分大小写默认参数
+            // if ((result = string.Compare(x.Name, y.Name, StringComparison.Ordinal)) != 0)
+            if ((result = string.Compare(x.Name, y.Name)) != 0)
+                return result;
+    
+            return result;
+    
+        }
+    }
+    
+    
+    /// <summary>
+    /// Way1:
+    /// Convey the comparer to collection(List...)
+    /// 传比较器到集合
+    /// </summary>
+    public class PersonNoImp
+    {
+        private int _age;
+        private string _name;
+    
+        public PersonNoImp(int age, string name)
+        {
+            _age = age;
+            _name = name;
+        }
+    
+        public override string ToString()
+        {
+            return "Name:" + this._name + ", " + "Age: " + this._age;
+        }
+    
+        public int Age => _age;
+    
+        public string Name => _name;
+    }
+    
+    
+    /// <summary>
+    /// Way2:
+    /// Implement interface of Comparer
+    /// 实现Comparer接口
+    /// </summary>
+    public class PersonImpComparer : Comparer<PersonImpComparer>
+    {
+        private int _age;
+        private string _name;
+    
+        public PersonImpComparer(int age, string name)
+        {
+            _age = age;
+            _name = name;
+        }
+    
+        public override string ToString()
+        {
+            return "Name:" + this._name + ", " + "Age: " + this._age;
+        }
+        /// <summary>
+        /// 实现比较接口
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public override int Compare(PersonImpComparer x, PersonImpComparer y)
+        {
+            // Default is equaled
+            int result = 0;
+    
+            if ((result = x._age.CompareTo(y._age)) != 0)
+                return result;
+    
+            // x._name.CompareTo(y._name)
+            // In case of the null reference
+            // 这样写可以防止引用null报错
+            // 忽略大小写
+            // if ((result = string.Compare(x._name, y._name, StringComparison.OrdinalIgnoreCase)) != 0)
+            // The default comparison
+            // 按照实际顺序，区分大小写默认参数
+            // if ((result = string.Compare(x._name, y._name, StringComparison.Ordinal)) != 0)
+            if ((result = string.Compare(x._name, y._name)) != 0)
+                return result;
+    
+            return result;
+        }
+    }
     ```
     
 * Code Block & Static Black & Static Constructor function(代码块&静态代码块&静态构造方法)
