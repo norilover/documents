@@ -1806,3 +1806,78 @@ public class Test{
 
     
 
+* Regex(正则表达式)
+
+```c#
+public class Test{
+    public static void Main(string[] args)
+    {
+        var tar = String.Empty;
+        var pattern = String.Empty;
+
+        // Match 0 or many times at least
+        tar = "NoriLover";
+        pattern = "Norii*";
+        IsMatch(pattern, tar);
+
+        // Match 1 or many times at least
+        tar = "NoriLover";
+        pattern = "Norii+";
+        IsMatch(pattern, tar);           
+
+        // Match 0 or 1 times at least
+        tar = "NoriLover";
+        pattern = "Norii?";
+        IsMatch(pattern, tar);           
+
+        // {#[,#]}
+        // Only match 1 time, Number from 0 to 5.
+        tar = "44";
+        pattern = "[0-4]{1}";
+        IsMatch(pattern, tar);
+
+        // Match 1 time at least, Number from 0 to 5.
+        tar = "66";
+        pattern = "[0-4]{1,}";
+        IsMatch(pattern, tar);
+
+        // Match 1, 2 times, Number from 0 to 5.
+        tar = "55";
+        pattern = "[0-4]{1,2}";
+        IsMatch(pattern, tar);
+
+        tar = "NorLover";
+        pattern = "Nor[i]*";
+        IsMatch(pattern, tar);
+
+        // More than 24
+        tar = "25:55";
+        pattern = "^2[5-9]:";
+        IsMatch(pattern, tar);
+
+        // Detect more than 24:00
+        // tar = "24:05";
+        tar = "24:00";
+        pattern = "^24:0?[1-9]{1,2}0?";
+        IsMatch(pattern, tar);
+        tar = "25:11";
+        pattern = "(^2[5-9])?(^24:0?[1-9]{1,2}0?)?";
+        IsMatch(tar, pattern);
+
+        Console.WriteLine("------------");
+
+        Console.ReadLine();
+    }    
+    
+    private static void IsMatch(string pattern, string tar)
+    {
+        Regex regex = new Regex(pattern);
+        Match match = regex.Match(tar);
+        if (match.Success)
+            Console.WriteLine("Succ");
+        else
+            Console.WriteLine("Fail");
+    }
+}
+```
+
