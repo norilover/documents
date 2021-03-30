@@ -1881,3 +1881,79 @@ public class Test{
 }
 ```
 
+* Queue(循环队列)
+
+![img01](D:.\img\img01.png)
+
+```c#
+public Queue(int capacity)
+{
+    if (capacity < 0)
+        ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.capacity, ExceptionResource.ArgumentOutOfRange_NeedNonNegNumRequired);
+    this._array = new T[capacity];
+    this._head = 0;
+    this._tail = 0;
+    this._size = 0;
+}
+
+public void Enqueue(T item)
+{
+    if (this._size == this._array.Length)
+    {
+        int capacity = (int) ((long) this._array.Length * 200L / 100L);
+        if (capacity < this._array.Length + 4)
+            capacity = this._array.Length + 4;
+        this.SetCapacity(capacity);
+    }
+    this._array[this._tail] = item;
+    // Enter queue 
+    // 进队
+    this._tail = (this._tail + 1) % this._array.Length;
+    
+    ++this._size;
+    ++this._version;
+}
+
+
+public T Dequeue()
+{
+    if (this._size == 0)		 	           ThrowHelper.ThrowInvalidOperationException(ExceptionResource.InvalidOperation_EmptyQueue);
+    T obj = this._array[this._head];
+    this._array[this._head] = default (T);
+    // 出队
+    this._head = (this._head + 1) % this._array.Length;
+    --this._size;
+    ++this._version;
+    return obj;
+}
+
+public void Clear()
+{
+    if (this._head < this._tail)
+    {
+        Array.Clear((Array) this._array, this._head, this._size);
+    }
+    else
+    {
+        Array.Clear((Array) this._array, this._head, this._array.Length - this._head);
+        Array.Clear((Array) this._array, 0, this._tail);
+    }
+    this._head = 0;
+    this._tail = 0;
+    this._size = 0;
+    ++this._version;
+}
+
+public T Peek()
+{
+    if (this._size == 0)
+        ThrowHelper.ThrowInvalidOperationException(ExceptionResource.InvalidOperation_EmptyQueue);
+    return this._array[this._head];
+}
+
+public int Count
+{
+    [__DynamicallyInvokable] get => this._size;
+}
+```
+
