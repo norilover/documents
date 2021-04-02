@@ -1122,6 +1122,40 @@ params :
             }
 ```
 
+```mariadb
+-- Reference Mariadb's, parameter of procedure or function
+
+CREATE
+    [DEFINER = user]
+    PROCEDURE sp_name ([proc_parameter[,...]])
+    [characteristic ...] routine_body
+
+CREATE
+    [DEFINER = user]
+    FUNCTION sp_name ([func_parameter[,...]])
+    RETURNS type
+    [characteristic ...] routine_body
+
+proc_parameter:
+    [ IN | OUT | INOUT ] param_name type
+
+func_parameter:
+    param_name type
+
+type:
+    Any valid MySQL data type
+
+characteristic: {
+    COMMENT 'string'
+  | LANGUAGE SQL
+  | [NOT] DETERMINISTIC
+  | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA }
+  | SQL SECURITY { DEFINER | INVOKER }
+}
+```
+
+
+
 * typeof
 
 ```c#
