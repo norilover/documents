@@ -50,12 +50,49 @@ for i, ele in ipairs(a) do
     print(ele)
 end
 
--- key & value
+-- 作为哈希表
 _table = {}
 _table["Nori"] = "one value"
 _table["Jerry"] = "another value"
 print(_table["Nori"]);
 print(_table["Jerry"]);
+
+-- 作为数组
+-- 默认从 下标 1 开始
+_table = {1,2,3,4}
+-- 效果和上面相同
+--[[
+_table = {
+   [1] = 1,
+   [2] = 2,
+   [3] = 3,
+   [4] = 4}
+]]
+
+print(_table[1])	-- 1
+print(_table[2])	-- 2
+print(_table[3])	-- 3
+print(_table[4])	-- 4
+print(_table[0])	-- nil
+-- 接着在100 下标处赋值
+_table[100] = 100
+-- for循环打印, 只会打印1到4内的值
+for i, val in ipairs(_table) do
+    print(i .. " " .. val)
+end
+-- 1
+-- 2
+-- 3
+-- 4
+
+-- table中内容多样
+tb1 = {[1] = "type1", x = 5, y = 20, type = "DAY"}
+for i, val in ipairs(tb1) do
+  print(i .. " " .. val)
+end
+-- 输出 1 type1
+
+print(tb1.x .. " " .. tb1.y .. " " .. tb1.type)	-- 5 20 DAY
 
 
 --[[ 变量：
@@ -95,6 +132,21 @@ do
     	print("While cycle!");
 end
 
+-- 传统的do{ ..}while(condition)
+repeat
+  i = i + 2
+  print(i)
+until i > 12
+-- 输出
+--[[
+    2
+    4
+    6
+    8
+    10
+    12
+    14
+]]
 
 -- if
 if(true)
@@ -129,6 +181,17 @@ end
 function fun1(...)
 	print("Can change parameter!")    
 end
+
+-- 闭包函数
+function fun1()
+    return function ()
+    	return 1	   
+    end     
+end
+
+-- 元表（Metatable）
+
+
 ```
 *  逻辑运算符
 
@@ -140,6 +203,41 @@ end
 | or     | 逻辑或操作符。 如果两边的操作任一一个为 true 则条件为 true。 | (A or B) 为 true。     |
 | not    | 逻辑非操作符。与逻辑运算结果相反，如果条件为 true，逻辑非为 false。 | not(A and B) 为 true。 |
 
+> 逻辑运算符扩展用法
+>
+> Actually, it's more like the below. This is called "short-circuited" logic, meaning the parser can stop reading the rest of the logic statement when the first part already gives you the end value. You can use this property in a lot of tricks.
+>
+> ```lua
+> -- a and b -- (any values) b if a is truthy otherwise a
+> -- EG
+> a = 1 
+> b = nil
+> c = a and b
+> print(c) -- nil
+> b = 2
+> c = a and b
+> print(c) -- 2
+> 
+> -- a or b  -- (any values) a if a is truthy otherwise b
+> -- EG
+> a = 1 
+> b = nil
+> c = a or b
+> print(c) -- 1
+> a = nil
+> b = 2
+> c = a or b
+> print(c) -- 2
+> 
+> -- EG
+> -- example trick: assign a to empty table only if a isn't defined already
+> -- remember how "nil" is a falsey value? if a isn't defined, a is nil, so
+> -- "a or {}" will evaluate to {}.
+> a = a or {}
+> ```
+
+
+
 * 其他运算法
 
 ```lua
@@ -147,6 +245,34 @@ end
 -- 返回字符串或表的长度
 
 -- ..
+
+-- ~= 相当于 其它语言的 !=
+if 10 ~= 11 then
+    print("Not equals!")
+end
+
+-- ==
+if true == true
+    print("true")
+end
+
+
+```
+
+* 库函数
+
+```lua
+string.reserve()
+...
+
+table.concat()
+...
+
+-- 加载模块
+require("module_name")
+require "module_name"
+-- 
+
 
 ```
 
