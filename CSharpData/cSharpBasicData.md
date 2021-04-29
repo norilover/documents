@@ -1375,7 +1375,6 @@ lock(x)
 
 
 > 协程
->
 
 ```C#
 public class Test{
@@ -1989,5 +1988,32 @@ public int Count
 {
     [__DynamicallyInvokable] get => this._size;
 }
+```
+
+* Infinity & NaN
+
+```c#
+// double 和 float 类型实际上有一个可以表示无穷大的特殊值：5.0/0.0 = Infinity （无穷大），这个规则唯一的例外是0.0/0.0 = NaN （Not a Number）
+
+// float 中的相应API
+public static unsafe bool IsNaN(float f) => (*(int*) &f & int.MaxValue) > 2139095040;
+
+public static unsafe bool IsInfinity(float f) => (*(int*) &f & int.MaxValue) == 2139095040;
+
+public static unsafe bool IsPositiveInfinity(float f) => *(int*) &f == 2139095040;
+
+public static unsafe bool IsNegativeInfinity(float f) => *(int*) &f == -8388608;
+
+// double 中相应API
+public static unsafe bool IsNaN(double d) => (ulong) (*(long*) &d & long.MaxValue) > 9218868437227405312UL;
+
+public static unsafe bool IsInfinity(double d) => (*(long*) &d & long.MaxValue) == 9218868437227405312L;
+
+public static bool IsPositiveInfinity(double d) => d == double.PositiveInfinity;
+
+public static bool IsNegativeInfinity(double d) => d == double.NegativeInfinity;
+
+// 计算高精度浮点数使用Decimal
+Decimal.Divide(num1, num2);
 ```
 
