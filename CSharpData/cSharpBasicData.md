@@ -2017,3 +2017,70 @@ public static bool IsNegativeInfinity(double d) => d == double.NegativeInfinity;
 Decimal.Divide(num1, num2);
 ```
 
+* Query KeyWords Usage
+
+```c#
+public class Test{
+    private static void Main()
+    {
+        // DicTest();
+
+        int i = 100;
+        List<int> list = new List<int>();
+        while (i-- > 0)
+        {
+            list.Add(i);
+        }
+
+        var orderResult = from i1 in list group i1 by i1 % 10;
+
+        foreach (var VARIABLE in orderResult)
+        {
+            Console.Write("Key: " + VARIABLE.Key + ": ");
+            var enumerator = VARIABLE.GetEnumerator();
+            while(enumerator.MoveNext())
+                Console.Write("     : " + enumerator.Current);
+            Console.WriteLine("-");
+        }
+        /*Output:
+                Key: 9:      : 99     : 89     : 79     : 69     : 59     : 49     : 39     : 29     : 19     : 9-
+                Key: 8:      : 98     : 88     : 78     : 68     : 58     : 48     : 38     : 28     : 18     : 8-
+                Key: 7:      : 97     : 87     : 77     : 67     : 57     : 47     : 37     : 27     : 17     : 7-
+                Key: 6:      : 96     : 86     : 76     : 66     : 56     : 46     : 36     : 26     : 16     : 6-
+                Key: 5:      : 95     : 85     : 75     : 65     : 55     : 45     : 35     : 25     : 15     : 5-
+                Key: 4:      : 94     : 84     : 74     : 64     : 54     : 44     : 34     : 24     : 14     : 4-
+                Key: 3:      : 93     : 83     : 73     : 63     : 53     : 43     : 33     : 23     : 13     : 3-
+                Key: 2:      : 92     : 82     : 72     : 62     : 52     : 42     : 32     : 22     : 12     : 2-
+                Key: 1:      : 91     : 81     : 71     : 61     : 51     : 41     : 31     : 21     : 11     : 1-
+                Key: 0:      : 90     : 80     : 70     : 60     : 50     : 40     : 30     : 20     : 10     : 0-
+             */
+
+        Console.WriteLine("-----------------------------------------------------------------------------");
+
+        
+        var orderResult1 = from i1 in list group i1 by i1 % 10 into result orderby result.Key select result;
+        foreach (var VARIABLE in orderResult1)
+        {
+            Console.Write("Key: " + VARIABLE.Key + ": ");
+            var enumerator = VARIABLE.GetEnumerator();
+            while(enumerator.MoveNext())
+                Console.Write("     : " + enumerator.Current);
+            Console.WriteLine("-");
+        }           
+        /*Output:
+                Key: 0:      : 90     : 80     : 70     : 60     : 50     : 40     : 30     : 20     : 10     : 0-
+                Key: 1:      : 91     : 81     : 71     : 61     : 51     : 41     : 31     : 21     : 11     : 1-
+                Key: 2:      : 92     : 82     : 72     : 62     : 52     : 42     : 32     : 22     : 12     : 2-
+                Key: 3:      : 93     : 83     : 73     : 63     : 53     : 43     : 33     : 23     : 13     : 3-
+                Key: 4:      : 94     : 84     : 74     : 64     : 54     : 44     : 34     : 24     : 14     : 4-
+                Key: 5:      : 95     : 85     : 75     : 65     : 55     : 45     : 35     : 25     : 15     : 5-
+                Key: 6:      : 96     : 86     : 76     : 66     : 56     : 46     : 36     : 26     : 16     : 6-
+                Key: 7:      : 97     : 87     : 77     : 67     : 57     : 47     : 37     : 27     : 17     : 7-
+                Key: 8:      : 98     : 88     : 78     : 68     : 58     : 48     : 38     : 28     : 18     : 8-
+                Key: 9:      : 99     : 89     : 79     : 69     : 59     : 49     : 39     : 29     : 19     : 9-
+             */
+        Console.WriteLine();
+    }
+}
+```
+
