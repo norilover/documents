@@ -400,14 +400,221 @@ Structure
 
 // Composite
 {
-	
+	public abstract LetterComposite{
+		private List<LetterComposite> children = new List<>();
+
+		public void add(LetterComposite letter){
+			children.add(letter);
+		}
+
+		public int count(){
+			return children.size();
+		}
+
+		protected void printBefore(){}
+		protected void printAfter(){}
+
+		public void print(){
+			printBefore();
+
+			children.forEach(LetterComposite::print);
+
+			printAfter();
+		}
+	}		
+
+	public class Sentence extends LetterComposite {
+
+		Words words = new Words();
+		
+		public Sentence(List<Word> words) {
+			words.forEach(this::add);
+		}
+
+		// @Override
+		protected void printThisAfter() {
+			log(".");
+		}
+	}	
+
 }
 
 // Decorator
-// Facade
-// Flyweight
-// Proxy
+{
+	public class Test{
+		...main(){
+			Restaurantable restaurantable = new SH_Restaurant(new BJ_Restaurant());
+			restaurantable.orderFood();
+			restaurantable.serveFood();
+			restaurantable.checkOut();
+		}
+	}
 
+	public interface Restaurantable{
+		void orderFood();
+		void serveFood();
+		void checkOut();
+	}
+
+	public class SH_Restaurant : Restaurantable{
+		private Restaurantable restaurantable;
+		public SH_Restaurant(Restaurantable restaurantable){
+			this.restaurantable = restaurantable;
+		}
+
+		public void orderFood(){
+			restaurantable.orderFood();
+			log("Order Food!");
+		}
+		public void serveFood(){
+			restaurantable.serveFood();
+			log("Serve Food!");
+		}
+		public void checkOut(){
+			restaurantable.checkOut();
+			log("Check Food!");
+		}
+	}
+
+	public class BJ_Restaurant : Restaurantable{
+		private Restaurantable restaurantable;
+		public BJ_Restaurant(Restaurantable restaurantable){
+			this.restaurantable = restaurantable;
+		}
+
+		public void orderFood(){
+			restaurantable.orderFood();
+			log("Order Food!");
+		}
+		public void serveFood(){
+			restaurantable.serveFood();
+			log("Serve Food!");
+		}
+		public void checkOut(){
+			restaurantable.checkOut();
+			log("Check Food!");
+		}
+	}
+}
+
+
+// No Important
+// No Implement
+// Facade
+{
+	public class Test{
+
+	}
+}
+
+
+// Flyweight
+{
+	public class Test{
+		...main(){
+			ProvinceFactory provinceFactory = new ProvinceFactory();
+			log(provinceFactory.getProvinceInfo(ProvinceType.SH).getName());
+			log(provinceFactory.getProvinceInfo(ProvinceType.BJ).getName());
+			// log(provinceFactory.getProvinceInfo(ProvinceType.LY).getName());
+		}
+	}
+
+	public enum ProvinceType{
+		SH,
+		BJ,
+		HN,
+		// ...so many
+	}
+
+	public interface ProvincialCapital{
+		String getName();
+
+		// ...so many
+	}
+
+	public class SH_ProvincialCapital : ProvincialCapital{
+		public String getName(){
+			return "SH";
+		}
+	}
+
+	public class BJ_ProvincialCapital : ProvincialCapital{
+		public String getName(){
+			return "BJ";
+		}
+	}
+
+	public class ProvinceFactory{
+		private static Map<ProvinceType, ProvincialCapital> map = new Map<>();
+		
+		static {
+			if(!map.containsKey(ProvinceType.SH)){
+				map.put(ProvinceType.SH, new SH_ProvincialCapital);
+			}
+
+			if(!map.containsKey(ProvinceType.BJ)){
+				map.put(ProvinceType.BJ, new BJ_ProvincialCapital);
+			}
+
+			// ... so many
+		}
+
+		public ProvincialCapital getProvinceInfo(ProvinceType provinceType){
+			return map.containsKey(provinceType) ? map.get(provinceType) ? null;
+
+		}
+	}	
+}
+
+
+// Proxy
+{
+	public class Test{
+		...main(){
+			Actionable actionable = new Policeman(new Passenger());
+			actionable.enter(new Action("Crash car!"));
+		}
+	}
+
+	public interface Actionable{
+		void enter(Action action);
+	}
+
+	public class Action{
+		String name;
+		public void setName(String name){
+			this.name = name;
+		}
+
+		public String toString(){
+			return this.name;
+		}
+	}
+
+	public class Passenger : Actionable{
+		Actionable actionable;
+		public Passenger(Actionable actionable){
+			this.actionable = actionable;
+		}
+
+		public void enter(Action action){
+			log("Native passenger! " + action.toString());
+			actionable.enter(action);
+		}
+	}
+
+	public class Policeman : Actionable{
+		Actionable actionable;
+		public Passenger(Actionable actionable){
+			this.actionable = actionable;
+		}
+
+		public void enter(Action action){
+			log("Policeman! " + action.toString());
+			actionable.enter(action);
+		}
+	}
+}
 
 /*
 Action
@@ -476,16 +683,186 @@ Action
 	}
 }
 
+
+// No Implement
 // Command
+{
+	public class Test{
+		...main(){
+
+		}
+	}
+
+	public class Operate{
+		private Deque<Command> redoCom = new LinkedList<>();
+		private Deque<Command> undoCom = new LinkedList<>();
+
+		public bool undoCommand(){
+			if(undoCom.size() <= 0)
+				return false;
+
+			var undoCommand = undoCom.PopTopEle();
+			redoCom.pushBottomEle(undoCommand); 
+		}
+
+		public bool redoCommand(){
+			if(redoCom.size() <= 0)
+				return false;
+
+			var redoCommand = undoCom.PopTopEle();
+			undoCom.pushBottomEle(redoCommand); 
+		}
+	}
+}
+
+
+// No Implement
+// Explain grammar of code or some one else
 // Interpreter
-// interator
+{
+	public class Test{
+
+	}
+}
+
+
+// Interator
+{
+	public class Test{
+		...main(){
+			NoriList<Nori> noriList = new NoriList<>();
+			Iterator<Nori> iterator = noriList.getIterator();
+
+			while(iterator.hasNext())
+				log(interator.next());
+		}
+	}
+
+	// 迭代器接口
+	public interface Iterator<T>{
+		Iterator<T> getIterator();
+
+		boolean hasNext();
+
+		T next();
+	}
+
+	// 实现迭代器的集合
+	public class NoriList<T> : Iterator<T>{
+		// 迭代器遍历时使用的集合
+		private NoriList noriList;
+		private int index;
+		// 当前 index 所指向的元素
+		private T current;
+
+		public Iterator<T> getIterator(){
+			setEnumerator(new NoriList<>(this));
+		}
+
+		// 内部方法构造迭代器
+		private void setEnumerator(NoriList noriList){
+			this.noriList = noriList;
+			this.index = 0;
+			// 第一个元素为T类型的默认值
+			this.current = default(T);
+		}
+
+		public boolean hasNext(){
+			// 首先赋值当前元素为null
+			<p></p>current = null;
+
+			if(this.noriList == null)
+				return false;
+
+			// 移向下一个元素的位置
+			index = index + 1;
+
+			// 判断元素是否存在
+			if(index >= this.noriList.size())
+				return false;
+
+			current = this.noriList[index];
+
+			return true;
+
+		}
+
+		// 获取当前元素
+		public T next(){
+			return current;
+		}
+	}
+}
+
+// No Implement
 // Mediator
+{
+	public interface Party{
+
+	}
+
+	public interface PartyMember{
+
+	}
+
+	public class PartyImp : Party{
+
+	}
+
+	public class PartyMemberBase : PartyMember{
+
+	}
+}
+
+
+// 可用于实现快照
 // Memento
+// Memento pattern captures object internal state making it easy to store and restore objects in any point of time.
+{
+	public class Test{
+
+	}
+}
+
+
 // Observer
+{
+	public class Test{
+
+	}
+}
+
+
 // State
+{
+	public class Test{
+
+	}
+}
+
+
 // Strategy
+{
+	public class Test{
+
+	}
+}
+
+
 // Template Method
+{
+	public class Test{
+
+	}
+}
+
+
 // Visitor
+{
+	public class Test{
+
+	}
+}
 
 
 
