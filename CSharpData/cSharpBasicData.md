@@ -2020,6 +2020,22 @@ Decimal.Divide(num1, num2);
 * Query KeyWords Usage
 
 ```c#
+/*
+	in :
+		后面直接跟数据的来源，如一个List集合等
+		
+	from :
+		后面跟变量名，这里的元素来自in后面的集合
+
+	group :
+	by ：
+		在group确定后，将按照规定分组的元素类型放在by后面(这类型在group里)
+	
+    into 将处理后的结果放在 一个设定的集合中， 而这个关键字后面跟这个集合的名字
+	
+	orderby :
+*/
+
 public class Test{
     private static void Main()
     {
@@ -2084,3 +2100,35 @@ public class Test{
 }
 ```
 
+* Array of question
+
+```c#
+/*
+	C# supports single- and multi-dimensional arrays of any type. Unlike the types listed above, array types do not have to be declared before they can be used. Instead, array types are constructed by following a type name with square brackets. 
+	For example:
+    	int[] is a single-dimensional array of int;
+        int[,] is a two-dimensional array of int;
+        int[][] is a single-dimensional array of single-dimensional arrays of int.
+*/
+public class Test{
+    ...main(){
+        // int[][] is a single-dimensional array of single-dimensional arrays of int.
+        // 实际上是一个一维数组，而每个一维数组的每个元素又指向一个一维数组
+        int[][][] arr = new int[7][7][1];
+        
+        // int[,] is a two-dimensional array of int;
+        // 真正的二维数组
+        int[,] arr1 = new int[7, 7];
+    }
+}
+```
+
+> 对应的实现图
+
+*  int\[]\[]\[] arr = new int\[7]\[7]\[1];
+
+![icon](img/img02.png)
+
+* int\[,] arr1 = new int\[7, 7];
+
+![icon](img/img03.png)
