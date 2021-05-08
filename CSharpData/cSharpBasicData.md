@@ -1052,74 +1052,134 @@ enum Season2
 * Method Parameters
 
 ```c#
-params : 
-    in  : can be read
-        requires that the variable be initialized before it is passed	
-        EG.
-            void fun(in int number)
-            {
-                // Exception
-                // Only can be read
-                number += 44;
-            }
-            ...main(){
+in  : can be read
+    requires that the variable be initialized before it is passed	
+    EG.
+    void fun(in int number)
+{
+    // Exception
+    // Only can be read
+    number += 44;
+}
+...main(){
 
-                int num;
-                // Exception 
-                // Not be initialized
-                fun(num);
-            }
-            ...main(){
+    int num;
+    // Exception 
+    // Not be initialized
+    fun(num);
+}
+...main(){
 
-                int num = 0;
-                // Exception
-                fun(num);
-            }
-            ...main(){
+    int num = 0;
+    // Exception
+    fun(num);
+}
+...main(){
 
-                int num = 0;
-                // No exception
-                fun1(num);
-                Console.WriteLine(num);
-            }    
+    int num = 0;
+    // No exception
+    fun1(num);
+    Console.WriteLine(num);
+}    
 
-    ref : can be read or written
-        requires that the variable be initialized before it is passed
-        EG.
-            void fun1(ref int number)
-            {
-                number += 44;
-            }
-            ...main(){
+ref : can be read or written
+    requires that the variable be initialized before it is passed
+    EG.
+    void fun1(ref int number)
+{
+    number += 44;
+}
+...main(){
 
-                int num;
-                // Exception
-                fun1(num);
-                Console.WriteLine(num);
-            }
-            ...main(){
+    int num;
+    // Exception
+    fun1(num);
+    Console.WriteLine(num);
+}
+...main(){
 
-                int num = 0;
-                // No exception
-                fun1(num);
-                Console.WriteLine(num);
-            }
-    out : can be written.
-        not requires that the variable be initialized before it is passed
-        EG.
-            void fun2(out int number)
-            {
-                number = 44;
-            }
-            ...main(){
+    int num = 0;
+    // No exception
+    fun1(num);
+    Console.WriteLine(num);
+}
+out : can be written.
+    not requires that the variable be initialized before it is passed
+    EG.
+    void fun2(out int number)
+{
+    number = 44;
+}
+...main(){
 
-                int num, num1 = 0;
-                // No exception
-                fun1(num);
-                Console.WriteLine(num);
-                fun1(num1);
-                Console.WriteLine(num);
-            }
+    int num, num1 = 0;
+    // No exception
+    fun1(num);
+    Console.WriteLine(num);
+    fun1(num1);
+    Console.WriteLine(num);
+}
+
+params : Sometimes, the requirement that you specify the exact number of arguments to your method is restrictive. 
+	// 类似Java的..., FunctionName(...);
+    /*
+    By using the params keyword to indicate that a parameter is a parameter array, you allow your method to be called with a 	variable number of arguments.
+    // 可以放置同一类型的参数多个
+    // FunctionName(params ParamType[] paramArr);
+    
+    The parameter tagged with the params keyword must be an array type, and it must be the last parameter in the method's parameter list.
+	// 如果有多种类型的参数，将被params修饰的参数放在参数列表的最后
+    // FunctionName(int namem, String name, params ParamType[] paramArr);
+
+A caller can then invoke the method in either of four ways:
+// 参数放置规则    
+	By passing an array of the appropriate type that contains the desired number of elements.
+    // FunctionName(new[]{ele1, ele2, ele3});
+    
+    By passing a comma-separated list of individual arguments of the appropriate type to the method.
+    // 可以放置相同类型的参数，只要可以被解析成数组即可
+    // FunctionName(new Ele(#1), new Ele(#2), new Ele(#3));
+   
+    By passing null.
+    // 可以传null值
+ 	// FunctionName(null);
+    
+    By not providing an argument to the parameter array. 
+ 	// 可以不传该参数
+ 	// FunctionName();
+ */
+    
+// 来自官网    
+class Example
+{
+    static void Main()
+    {
+        string fromArray = GetVowels(new[] { "apple", "banana", "pear" });
+        Console.WriteLine($"Vowels from array: '{fromArray}'");
+
+        string fromMultipleArguments = GetVowels("apple", "banana", "pear");
+        Console.WriteLine($"Vowels from multiple arguments: '{fromMultipleArguments}'");
+        
+        string fromNull = GetVowels(null);
+        Console.WriteLine($"Vowels from null: '{fromNull}'");
+
+        string fromNoValue = GetVowels();
+        Console.WriteLine($"Vowels from no value: '{fromNoValue}'");
+    }
+
+    static string GetVowels(params string[] input)
+    {
+        if (input == null || input.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        var vowels = new char[] { 'A', 'E', 'I', 'O', 'U' };
+        return string.Concat(
+            input.SelectMany(
+                word => word.Where(letter => vowels.Contains(char.ToUpper(letter)))));
+    }
+}    
 ```
 
 ```mariadb
