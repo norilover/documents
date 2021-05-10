@@ -864,5 +864,9 @@ Action
 	}
 }
 
+Test Svn version from 12419 to 14462, main including below fix question:
+	1.MainWin concerning the attaching question.
+	2.Member for some one region except region's own, giving the Grid own and admin priority to modify function located in the below of Member tab.
+	3.
 
 
