@@ -193,7 +193,56 @@ public class NoriInfo(){
 // Prototype 
 {
 	public class Test{
+		...main(){
+			IFigure figure = new Rectangle(10, 20);
+			figure.getInfo();
+			figure = figure.clone();
+			figure.getInfo();
 
+			IFigure figure1 = new Circle(15);
+			figure1.getInfo();
+			figure1 = figure1.clone();
+			figure1.getInfo();		
+		}
+	}
+
+	public interface IFigure{
+		void getInfo();
+	}
+
+	public class Circle : IFigure{
+		private int radius;
+
+		public Circle(int radius){
+			this.radius = radius;
+		}
+
+		public void getInfo(){
+			log("Circle's radius is: " + radius);
+		}
+
+		public Object clone(){
+			return new Circle(radius);
+		}
+	}
+
+
+	public class Rectangle : IFigure{
+		private int width, height;
+
+		public Rectangle(int width, int height){
+			this.width = width;
+			this.height = height;
+		}
+
+		public void getInfo(){
+			log("Circle's width is: " + width);
+			log("Circle's height is: " + height);
+		}
+
+		public Object clone(){
+			return new Rectangle(width. height);
+		}
 	}
 }
 
@@ -825,8 +874,33 @@ Action
 }
 
 
+// No Comprehensive
 // Observer
 {
+	/*
+		IObservable<Weather> interface
+			IDisposable Subscribe(IObserver<T> observer);
+				|
+				-
+			WeatherSupplier class
+
+
+		IObserver<Weather> interface
+		    void OnNext(T value);
+		    void OnError(Exception error);
+		    void OnCompleted();
+				|
+				-
+			WeatherMonitor class
+
+	天气的提供者（WeatherSupplier）：
+		可以阅定特定的WeatherMonitor，并保存取消阅定的操作
+			每次调用通知WeatherMonitor
+		可以发布新的天气情况
+			每次调用通知WeatherMonitor
+	天气的监控者（WeatherMonitor）:
+		对天气做出反应
+	*/
 	public class Test{
 
 	}
@@ -863,10 +937,4 @@ Action
 
 	}
 }
-
-Test Svn version from 12419 to 14462, main including below fix question:
-	1.MainWin concerning the attaching question.
-	2.Member for some one region except region's own, giving the Grid own and admin priority to modify function located in the below of Member tab.
-	3.
-
 
