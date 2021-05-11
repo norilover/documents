@@ -902,6 +902,117 @@ Action
 		对天气做出反应
 	*/
 	public class Test{
+		public Interface IObserver<T>{
+			void Subscribe(IObserver<T> observer);	
+		}
+
+		public interface IUnscriber{
+			void recordUnscribe(IObserver<Weather> observer);
+			void unscribe(IObserver<Weather> observer);
+		}
+
+		public Interface IObserverable<T>{
+		    void onNext(T value);
+		    void onError(Exception error);
+		    void onCompleted();	
+		}
+
+		public class Unsubscriber : IUnscriber{
+			private List<IObserver<Weather>> observers = new List<>();
+
+			public void recordUnscribe(IObserver<Weather> observer){
+				observers.Add(observer);
+			}
+
+			public void unscribe(IObserver<Weather> observer){
+				observers.removeIfAbsent(observers);
+			}
+		}
+
+		public class Weather{
+	        public double Pressure { get; }
+
+	        public double Humidity { get; }
+
+	        public double Temperature { get; }
+
+	        public Weather(double humd, double pres, double temp)
+	        {
+	            Temperature = temp;
+	            Pressure = pres;
+	            Humidity = humd;
+	        }
+		}
+
+		public class WeatherSupplier : IObserver<Weather>{
+			public IDisposable Subscribe(IObserver<Weather> observer){
+				private List<IObserver<Weather>> observers;
+				private List<Weather> screens;
+				private IUnbscriber unscribeManager;
+
+				private List<Weacher> getScreens(){
+					return screens;
+				} 
+
+				public WeatherSupplier(){
+					observers = new WeatherSupplier<>();
+					screens = new List<Weather>();
+					unscribeManager = new Unsubscriber<>();
+				}
+
+				public List<Weather> getScreens(){
+					return screens;
+				}
+
+				public void subscribe(IObserver<Weather> observer){
+					if(observers.contains(observer))
+						return;
+
+					observers.add(observer);
+					foreach(var item : getScreens())
+						observer.onNext(item);
+
+
+					unscribeManager.add(observer);
+				}
+
+				public void unsubscriber<Weather>(observers, observer){
+					observers.removeIfAbsent(observer);
+					unscribeManager.removeIfAbsent(observer);
+				}
+
+				public void weatherConditions(double temp, double humd, double pres){
+					var conditions = new Weather(humd, pres, temp);
+
+					foreach(var item : observers)
+						item.onNext();
+				}
+			}
+		}
+
+		// final
+		// TODO
+		public sealed class WeatherMonitor : IObserver<Weather>{
+			private IUnbscriber unscribeManager;
+			IObserver<Weather> cancelWeather;
+
+			public void subscribe(WeatherSupplier provider){
+				provider.subscribe(this);
+				
+				cancelWeather = provider;
+			}
+
+			public void unscribe(){
+				if(unscribeManager == null || cancelWeather == null)
+					return;
+
+				unscribeManager.unsubscriber(cancelWeather);	
+			}
+		}
+
+		public void onError(){}
+
+		public void onNext(Weather value){}
 
 	}
 }

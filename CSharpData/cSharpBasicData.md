@@ -559,57 +559,122 @@ Intersect : 交集
 
 * Other Linq
 
-```c#
-// Determines whether all elements of a sequence satisfy a condition.
-public static bool All<TSource> (this System.Collections.Generic.IEnumerable<TSource> source, Func<TSource,bool> predicate);
-// EG.
-class Pet
-{
-    public string Name { get; set; }
-    public int Age { get; set; }
-}
+- ```c#
+  // Determines whether all elements of a sequence satisfy a condition.
+  // EG.
+  {
+      class Pet
+      {
+          public string Name { get; set; }
+          public int Age { get; set; }
+      }
+  
+      public static void AllEx()
+      {
+          // Create an array of Pets.
+          Pet[] pets = { new Pet { Name="Barley", Age=10 },
+                         new Pet { Name="Boots", Age=4 },
+                         new Pet { Name="Whiskers", Age=6 } };
+  
+          // Determine whether all pet names
+          // in the array start with 'B'.
+  		// public static bool All<TSource> (this System.Collections.Generic.IEnumerable<TSource> source, Func<TSource,bool> predicate);
+          bool allStartWithB = pets.All(pet =>
+                                            pet.Name.StartsWith("B"));
+  
+          Console.WriteLine(
+              "{0} pet names start with 'B'.",
+              allStartWithB ? "All" : "Not all");
+      }
+      // This code produces the following output:
+      //
+      //  Not all pet names start with 'B'.    
+  }
+  
+  
+  
+  // Determines whether a sequence contains a specified element.
+  {
+      string[] fruits = { "apple", "banana", "mango", "orange", "passionfruit", "grape" };
+  
+      string fruit = "mango";
+      // Contains<TSource>(IEnumerable<TSource>, TSource, IEqualityComparer<TSource>)
+      bool hasMango = fruits.Contains(fruit);
+  
+      Console.WriteLine(
+          "The array {0} contain '{1}'.",
+          hasMango ? "does" : "does not",
+          fruit);
+  
+      // This code produces the following output:
+      //
+      // The array does contain 'mango'.   
+  }
+  
+  
+  
+  /*
+  	Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+  	通过传入的函数，创建新的结果集合
+  */
+  {
+      int[] ids = {1, 2, 3, 4, 5, 6};
+      string[] words = {"one", "two", "three" };
+  
+      // Zip<TFirst,TSecond,TResult>(IEnumerable<TFirst>, IEnumerable<TSecond>, Func<TFirst,TSecond,TResult>)
+      var numAndWords = ids.Zip(words, (i, s) => i + " -> " + s);
+  
+      foreach (var numAndWord in numAndWords)
+      {
+          Console.WriteLine(numAndWord); 
+      }
+      /*
+          1 -> one
+          2 -> two
+          3 -> three
+      */
+  }
+  
+  /*
+  Filters a sequence of values based on a predicate.
+  基于传入的函数去过滤出结果
+  */
+  {
+      // Where<TSource>(IEnumerable<TSource>, Func<TSource,Boolean>)
+      List<string> fruits =
+          new List<string> { "apple", "passionfruit", "banana", "mango",
+                            "orange", "blueberry", "grape", "strawberry" };
+  
+      IEnumerable<string> query = fruits.Where(fruit => fruit.Length < 6);
+  
+      foreach (string fruit in query)
+      {
+          Console.WriteLine(fruit);
+      } 
+      /*
+       apple
+       mango
+       grape
+      */    
+  }
+  
+  /*
+   创建出指定的集合
+  */
+  {
+      // ToDictionary<TSource,TKey>(IEnumerable<TSource>, Func<TSource,TKey>)
+      List<string> list = new List<>();
+      int i = 10;
+      while(i-- > 0)
+          list.Add(i + "");
+      Dictionary<int, string> dictionary = list.ToDictionary(p => int.Parse(p));
+      foreach (KeyValuePair<int, string> kvp in dictionary)
+      {
+          Console.WriteLine(kvp.key, kvp.Value);
+      }
+  }
+  ```
 
-public static void AllEx()
-{
-    // Create an array of Pets.
-    Pet[] pets = { new Pet { Name="Barley", Age=10 },
-                   new Pet { Name="Boots", Age=4 },
-                   new Pet { Name="Whiskers", Age=6 } };
-
-    // Determine whether all pet names
-    // in the array start with 'B'.
-    bool allStartWithB = pets.All(pet =>
-                                      pet.Name.StartsWith("B"));
-
-    Console.WriteLine(
-        "{0} pet names start with 'B'.",
-        allStartWithB ? "All" : "Not all");
-}
-
-// This code produces the following output:
-//
-//  Not all pet names start with 'B'.
-
-
-Contains<TSource>(IEnumerable<TSource>, TSource, IEqualityComparer<TSource>)
-// Determines whether a sequence contains a specified element.
-// EG.
-   string[] fruits = { "apple", "banana", "mango", "orange", "passionfruit", "grape" };
-
-string fruit = "mango";
-
-bool hasMango = fruits.Contains(fruit);
-
-Console.WriteLine(
-    "The array {0} contain '{1}'.",
-    hasMango ? "does" : "does not",
-    fruit);
-
-// This code produces the following output:
-//
-// The array does contain 'mango'.
-
-```
 
 
 
@@ -2155,6 +2220,49 @@ public class Test{
                 Key: 8:      : 98     : 88     : 78     : 68     : 58     : 48     : 38     : 28     : 18     : 8-
                 Key: 9:      : 99     : 89     : 79     : 69     : 59     : 49     : 39     : 29     : 19     : 9-
              */
+        
+        
+        
+     	/*
+     		join : 链接 多个集合，类似sql的内链接
+     		on : 使用join后使用on，后面添加多个集合链接的条件
+     		equals : 相等
+     	*/   
+        
+        List<string> list1 = new List<string>();
+        int i = 20;
+        while(i-- > 0)
+            list1.Add(i + "");
+
+        List<string> list2 = new List<string>();
+        while(i++ < 10)
+            list2.Add(i + "");
+
+        var query = from str1 in list1
+            join str2 in list2 on str1 equals str2
+            select new {str1 = str1.GetHashCode() + str2.GetHashCode() + " " + str1, str2 = str2.GetHashCode() + str1.GetHashCode() + " " + str2};
+
+        foreach (var VARIABLE in query)
+        {
+            Console.WriteLine(VARIABLE.str1 + ", " + VARIABLE.str2);
+        }
+        /*
+                -1686802658 10, -1686802658 10
+                -1684705490 9, -1684705490 9
+                -1684705488 8, -1684705488 8
+                -1684705518 7, -1684705518 7
+                -1684705516 6, -1684705516 6
+                -1684705514 5, -1684705514 5
+                -1684705512 4, -1684705512 4
+                -1684705510 3, -1684705510 3
+                -1684705508 2, -1684705508 2
+                -1684705506 1, -1684705506 1
+                -1684705504 0, -1684705504 0
+         */
+        
+        
+        
+        
         Console.WriteLine();
     }
 }
