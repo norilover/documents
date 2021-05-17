@@ -2300,3 +2300,33 @@ public class Test{
 * int\[,] arr1 = new int\[7, 7];
 
 ![icon](img/img03.png)
+
+* async & await
+```c#
+// If you use a Task return type for an async method, a calling method can use an await operator to suspend the caller's completion until the called async method has finished.
+// 当使用async修饰的方法时，方法中 await后面跟的调用方法，可以暂停等待直到该调用方法执行结束，才开始执行下一行语句。
+
+// Asynchrony is essential for activities that are potentially blocking, such as web access. Access to a web resource sometimes is slow or delayed. If such an activity is blocked in a synchronous process, the entire application must wait. In an asynchronous process, the application can continue with other work that doesn't depend on the web resource until the potentially blocking task finishes.
+// 
+public static async Task DisplayCurrentInfoAsync()
+{
+    await WaitAndApologizeAsync();
+
+    Console.WriteLine($"Today is {DateTime.Now:D}");
+    Console.WriteLine($"The current time is {DateTime.Now.TimeOfDay:t}");
+    Console.WriteLine("The current temperature is 76 degrees.");
+}
+
+static async Task WaitAndApologizeAsync()
+{
+    await Task.Delay(2000);
+
+    Console.WriteLine("Sorry for the delay...\n");
+}
+// Example output:
+//    Sorry for the delay...
+//
+// Today is Monday, August 17, 2020
+// The current time is 12:59:24.2183304
+// The current temperature is 76 degrees.
+```
