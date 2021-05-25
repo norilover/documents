@@ -43,6 +43,7 @@ namespace ConsoleTest
             
             HeapSort heapSort = new HeapSort();
             heapSort.sort(array);
+            print(array);
             
             //
             // XShellSort xshellSort = new XShellSort();
@@ -66,7 +67,59 @@ namespace ConsoleTest
             if (array == null || array.Length >= 1)
                 return;
 
-            // nativeSort(array);
+            nativeSort(array);
+        }
+
+        
+        private void nativeSort(int[] array)
+        {
+            // Build the heap
+            for (int i = array.Length / 2 - 1; i >= 0; i--)
+            {
+                heapify(array, array.Length, i);
+            }
+            
+            // Doing heap sort
+            // Every cycle always put the present range's max value to index of the rangeIndex + 1 
+            for (int i = array.Length - 1; i > 0; i--)
+            {
+                nativeSwap(ref array[i], ref array[0]);
+                
+                // Call the max value to
+                heapify(array, i, 0);
+            }
+        }
+
+
+        private void heapify(int[] array, int length, int valueIndex)
+        {
+            int largeValueIndex = valueIndex;
+            
+            int leftChildIndex = valueIndex * 2 + 1;
+            int rightChildIndex = valueIndex * 2 + 2;
+
+            if (leftChildIndex < length && array[leftChildIndex] > array[largeValueIndex])
+                largeValueIndex = leftChildIndex;
+
+            if (rightChildIndex < length && array[rightChildIndex] > array[largeValueIndex])
+                largeValueIndex = rightChildIndex;
+
+            if (valueIndex != largeValueIndex)
+            {
+                // Swap the value
+                nativeSwap(ref array[largeValueIndex], ref array[valueIndex]);
+                
+                // Go on deal with the max value
+                heapify(array, length, largeValueIndex);
+            }
+        }
+        
+        
+        private void nativeSwap(ref int i, ref int i1)
+        {
+            i  ^= i1;
+            i1 ^= i;
+            i  ^= i1;
         }
     }
 
