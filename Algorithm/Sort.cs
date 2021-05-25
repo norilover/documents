@@ -12,8 +12,9 @@ namespace ConsoleTest
     {
         public static void Main(string[] args)
         {
-            int[] array = new[] {1, 5, 2, 6, 1};
-            
+            int[] array = new[] {10, 5, 3, 2, 6, 1};
+            print(array);
+            Console.WriteLine("-----------------------------------");
             // BubbleSort bubbleSort = new BubbleSort();
             // bubbleSort.sort(array);
             // print(array);
@@ -29,9 +30,20 @@ namespace ConsoleTest
 
             // MergeSort mergeSort = new MergeSort();
             // mergeSort.sort(array);
-            //
-            // HeapSort heapSort = new HeapSort();
-            // heapSort.sort(array);
+            // print(array);
+            /***
+               1
+               2
+               3
+               5
+               6
+               10
+             */
+            
+            
+            HeapSort heapSort = new HeapSort();
+            heapSort.sort(array);
+            
             //
             // XShellSort xshellSort = new XShellSort();
             // xshellSort.sort(array);
@@ -46,8 +58,91 @@ namespace ConsoleTest
             }
         }
     }
-    
-    
+
+    public class HeapSort
+    {
+        public void sort(int[] array)
+        {
+            if (array == null || array.Length >= 1)
+                return;
+
+            // nativeSort(array);
+        }
+    }
+
+    public class MergeSort
+    {
+        public void sort(int[] array)
+        {
+            if (array == null || array.Length <= 1)
+                return;
+
+            nativeSort(array, 0, array.Length - 1);
+        }
+
+        private void nativeSort(int[] array, int left, int right)
+        {
+            if (left >= right)
+                return;
+
+            // Console.WriteLine("array: " + "i: " + left + ", arrayLength: " + right);
+            
+            // Equals to (right + left) / 2, this write in case if the overflow range of int when calculate the sum between left and right
+            int middle = left + (right - left) / 2;
+            
+            // Sub range split
+            nativeSort(array, left, middle);
+            nativeSort(array, middle + 1, right);
+            
+            // Merge
+            merge(array, left, right, middle);
+        }
+
+        private void merge(int[] array, int left, int right, int middle)
+        {
+            int left1 = left;
+            int left2 = middle + 1;
+
+            int[] array1 = new int[left2 - left1];
+            int[] array2 = new int[right - left2 + 1];
+            
+            // Duplicate the element to array1 and array2
+            int k = 0;
+            for (int j = left1; j <= middle; j++)
+                array1[k++] = array[j];
+
+            k = 0;
+            for (int j = left2; j <= right; j++)
+                array2[k++] = array[j];
+
+            // From the left start
+            k = left1;
+            
+            int array1Index = 0;
+            int array2Index = 0;
+            while (array1Index < array1.Length && array2Index < array2.Length)
+            {
+                if (array1[array1Index] > array2[array2Index])
+                {
+                    array[k] = array2[array2Index++];
+                }
+                else
+                {
+                    array[k] = array1[array1Index++];
+                }
+
+                k++;
+            }
+            
+            // Deal with the surplus array
+            while (array1Index < array1.Length)
+                array[k++] = array1[array1Index++];
+            while (array2Index < array2.Length)
+                array[k++] = array2[array2Index++];
+        }
+    }
+
+
     public class QuickSort
     {
         public void sort(int[] array)
