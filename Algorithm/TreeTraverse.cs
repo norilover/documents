@@ -41,8 +41,6 @@ namespace ConsoleTest
             // Iterator Traverse
             // NLR_I(head);
             // LNR_I(head);
-            
-            //TODO Q
             // LRN_I(head);
 
             // layerTraverse_useQueue(head);
@@ -63,17 +61,19 @@ namespace ConsoleTest
                 if (temp == null)
                 {
                     temp = stack.Peek();
+                    
                     if (temp.rightNode != null && temp.rightNode != visitedTN)
                     {
                         temp = temp.rightNode;
-                        visitedTN = temp;
                         stack.Push(temp);
-
+                        
                         temp = temp.leftNode; 
                         continue;
                     }
 
+                    // Traverse node and pop stack
                     temp = stack.Pop();
+                    visitedTN = temp;
                     print(temp.value);
                     temp = null;
                 }
