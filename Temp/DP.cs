@@ -851,6 +851,13 @@ Action
 	}
 
 	public interface PartyMember{
+		private Party party;
+
+		public PartyMember(Party party){
+			this.party = party;
+		}
+
+		public
 
 	}
 

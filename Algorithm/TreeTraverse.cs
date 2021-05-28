@@ -10,7 +10,7 @@ namespace ConsoleTest
      */
     public class TreeTraverse
     {
-        public static void Main(string[] args)
+        public static void Main2(string[] args)
         {
             /*            1
              *        |      |

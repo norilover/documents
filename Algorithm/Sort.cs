@@ -10,7 +10,7 @@ namespace ConsoleTest
      */
     public class Sort
     {
-        public static void Main(string[] args)
+        public static void Main1(string[] args = null)
         {
             int[] array = new[] {10, 5, 3, 2, 6, 1};
             print(array);
@@ -43,6 +43,10 @@ namespace ConsoleTest
             
             HeapSort heapSort = new HeapSort();
             heapSort.sort(array);
+            Action<int[]> action = (int[] arr) =>
+            {
+
+            };
             print(array);
             
             //
