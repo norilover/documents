@@ -2330,3 +2330,201 @@ static async Task WaitAndApologizeAsync()
 // The current time is 12:59:24.2183304
 // The current temperature is 76 degrees.
 ```
+
+* yield
+
+```C#
+/*
+The program can jump back and forth between the two modes without losing their current state.
+*/
+class Test{
+    public static void _Main(string[] args)
+    {
+        // 简单场景：
+        IEnumerable iEnumerator = generateRandomNum(0,10);
+        foreach (var VARIABLE in iEnumerator)
+        {
+            print("Get num: " + VARIABLE + " Main()");
+        }
+        /***
+ 			分析：
+                先调用 generateRandomNum():
+                Generate Number: 4generateRandomNum() start
+                
+                再调用 _Main()
+                Get num: 4 Main()
+                
+                再调用 generateRandomNum():
+                Generate Number: 4generateRandomNum() end
+                
+                按上面的顺序循环执行
+                
+           结果：
+                Generate Number: 1generateRandomNum() start
+                Get num: 1 Main()
+                Generate Number: 1generateRandomNum() end
+                Generate Number: 1generateRandomNum() start
+                Get num: 1 Main()
+                Generate Number: 1generateRandomNum() end
+                Generate Number: 1generateRandomNum() start
+                Get num: 1 Main()
+                Generate Number: 1generateRandomNum() end
+                Generate Number: 4generateRandomNum() start
+                Get num: 4 Main()
+                Generate Number: 4generateRandomNum() end
+                Generate Number: 4generateRandomNum() start
+                Get num: 4 Main()
+                Generate Number: 4generateRandomNum() end
+                Generate Number: 3generateRandomNum() start
+                Get num: 3 Main()
+                Generate Number: 3generateRandomNum() end
+                Generate Number: 8generateRandomNum() start
+                Get num: 8 Main()
+                Generate Number: 8generateRandomNum() end
+                Generate Number: 2generateRandomNum() start
+                Get num: 2 Main()
+                Generate Number: 2generateRandomNum() end
+                Generate Number: 5generateRandomNum() start
+                Get num: 5 Main()
+                Generate Number: 5generateRandomNum() end
+
+             */
+
+
+        // 复杂场景
+        int[] arr1 = {1, 2, 3, 4, 5, 6, 7};
+
+        int[] arr2 = {6, 7, 11, 34, 56};
+        IEnumerable enumerable = union(arr1, arr2); // intersect(arr1, arr2);
+
+        var enumertator = enumerable.GetEnumerator();
+        foreach (var VARIABLE in enumerable)
+        {
+            if (VARIABLE is IEnumerable)
+            {
+                print("IEnumerable");
+                var enumerable1 = VARIABLE as IEnumerable;
+                foreach (var VARIABLE1 in enumerable1)
+                {
+                    print(VARIABLE1 + " ");
+                }
+            }
+        }
+        /***
+             * union() Add element 1
+                IEnumerable
+                1
+                union() Add element 2
+                IEnumerable
+                1
+                2
+                union() Add element 3
+                IEnumerable
+                1
+                2
+                3
+                union() Add element 4
+                IEnumerable
+                1
+                2
+                3
+                4
+                union() Add element 5
+                IEnumerable
+                1
+                2
+                3
+                4
+                5
+                union() Add element 6
+                IEnumerable
+                1
+                2
+                3
+                4
+                5
+                6
+                union() Add element 7
+                IEnumerable
+                1
+                2
+                3
+                4
+                5
+                6
+                7
+                union() Add element 11
+                IEnumerable
+                1
+                2
+                3
+                4
+                5
+                6
+                7
+                11
+                union() Add element 34
+                IEnumerable
+                1
+                2
+                3
+                4
+                5
+                6
+                7
+                11
+                34
+                union() Add element 56
+                IEnumerable
+                1
+                2
+                3
+                4
+                5
+                6
+                7
+                11
+                34
+                56
+             */
+    }
+
+    private static IEnumerable generateRandomNum(int low, int high)
+    {
+        Random random = new Random();
+        for (int i = high - 1; i >= low; i--)
+        {
+            var num = random.Next(low, high);
+            print("Generate Number： " + num + "generateRandomNum() start");
+            yield return num;
+            print("Generate Number: " + num + "generateRandomNum() end");
+        }
+    }
+
+    private static IEnumerable union(IEnumerable<int> first, IEnumerable<int> second)
+    {
+        HashSet<int> set = new HashSet<int>();
+        foreach (var VARIABLE in first)
+        {
+            set.Add((int)VARIABLE);
+            print("union() Add element " + VARIABLE);
+            yield return set;
+        } 
+
+        foreach (var VARIABLE in second)
+        {
+            if (set.Add((int) VARIABLE))
+            {
+                print("union() Add element " + VARIABLE);
+                yield return set;
+            }
+        } 
+    }
+    
+    private static void print(object variable)
+    {
+        Console.WriteLine(variable.ToString());
+    }
+}        
+```
+
