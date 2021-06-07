@@ -2528,3 +2528,81 @@ class Test{
 }        
 ```
 
+* Thread
+
+```c#
+public class Test{
+    // Using the WaitHanle() implement the flexible wait
+    // 使用WaitHandle()实现灵活的等待机制
+    private static void WaitHandle()
+    {
+        Random r = new Random();
+
+        WaitCallback callBack = (state) =>
+        {
+            AutoResetEvent are = (AutoResetEvent) state;
+            int time = 1000 * r.Next(2, 10);
+
+            Console.WriteLine("Start" + time);
+            Console.WriteLine("Performing a task for {0} milliseconds.", time);
+            Thread.Sleep(time);
+            Console.WriteLine("End" + time);
+            are.Set();
+        };
+
+        WaitHandle[] waitHandle = new WaitHandle[]
+        {
+            new AutoResetEvent(false),
+            new AutoResetEvent(false),
+        };
+
+        ThreadPool.QueueUserWorkItem(callBack, waitHandle[0]);
+        ThreadPool.QueueUserWorkItem(callBack, waitHandle[1]);
+
+        // 1.WaitAll()
+        bool finish = System.Threading.WaitHandle.WaitAll(waitHandle);
+        Print("Finish all task is " + finish);
+        /**
+               Start7000
+               Performing a task for 7000 milliseconds.
+               Start6000
+               Performing a task for 6000 milliseconds.
+               End6000
+               End7000
+               Finish all task is True
+             */ 
+
+
+        // 2.WaitAny()
+        // int index = System.Threading.WaitHandle.WaitAny(waitHandle);
+        // Print("Finish task " + index);
+        // Print("Finish all task!");
+
+        // 2.WaitAny()
+        // 等待任意线程结束，即返回结果，但无法看到其它线程结束的标记
+        /**
+               Start5000
+               Performing a task for 5000 milliseconds.
+               Start3000
+               Performing a task for 3000 milliseconds.
+               End3000
+               Finish task 1
+               Finish all task!
+             */
+        // 使用 Console.Read() 阻塞等待可以看见其它线程结束的标记
+        // Console.Read();
+        /**
+               Start6000
+               Performing a task for 6000 milliseconds.
+               Start7000
+               Performing a task for 7000 milliseconds.
+               End6000
+               Finish task 0
+               Finish all task!
+               End7000
+
+         */
+    }
+}
+```
+
