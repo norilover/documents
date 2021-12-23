@@ -1067,6 +1067,13 @@ public class TurnSomething
         TestEvent.MyDelegateTemp -= TurnOne;
     }
 }
+
+/*
+event 使用注意点:
+	1.对于不同的
+*/
+
+public void AppendFucntion
 ```
 
 * Nullable value types
@@ -2604,5 +2611,124 @@ public class Test{
          */
     }
 }
+
+/***
+ * AutoResetEvent
+ * Set(): 释放一个信号（signal）
+ * WaitOne(): 一直在被调用处阻塞直到一个信号(signal)被释放
+ */
+public class ThreadTest
+{
+    readonly AutoResetEvent _autoResetEvent= new AutoResetEvent(false);
+    private Action _action;
+    public void Start()
+    {
+        _action = () =>
+        {
+            lock (_action)
+            {
+                Console.WriteLine("Sleep: ");
+                Thread.Sleep(new TimeSpan(0,0,5));
+                Console.WriteLine("Sleep: release");
+                _autoResetEvent.Set();
+            }
+        };
+
+        for (int i = 10 - 1; i >= 0; i--)
+        {
+            var thread = new Thread(() =>
+                                    {
+                                        Console.WriteLine(Thread.CurrentThread.Name + " Start");
+                                        while (true)
+                                        {
+                                            Console.WriteLine(Thread.CurrentThread.Name + "While Start");
+                                            StringBuilder stringBuilder = new StringBuilder();
+                                            stringBuilder
+                                                .Append(Thread.CurrentThread.Name);
+                                            // .Append(i.ToString());
+
+                                            for (int ii = 20 - 1; ii >= 0; ii--)
+                                            {
+                                                stringBuilder
+                                                    .Append(" (")
+                                                    .Append(Thread.CurrentThread.Name)
+                                                    .Append(")");
+                                            }
+
+                                            Console.WriteLine(stringBuilder.ToString());
+                                            stringBuilder.Clear();
+
+                                            _autoResetEvent.WaitOne();
+
+                                            new Thread(() =>
+                                                       {
+                                                           _action();
+                                                       }).Start();
+
+                                            Console.WriteLine(Thread.CurrentThread.Name + "While End");
+                                        }
+
+                                    });
+
+            thread.Name = "Thread: " + i;
+            thread.Start();
+
+            new Thread(() =>
+                       {
+                           _action();
+                       }).Start();
+        }
+    }
+}
+```
+
+* unsafe
+
+```c#
+class Program{
+            class Unsafe
+        {
+            public unsafe void swap(int *a, int *b)
+            {
+                int 临时 = *a;
+                *a = *b;
+                *b = 临时;
+            }
+        }
+        
+        static void Main(string[] args)
+        {
+            unsafe
+            {
+                Console.WriteLine("Hello World!");
+                int a = 10;
+                int b = 20;
+
+                Console.WriteLine("a: " + a + ", b" + b);
+                
+                new Unsafe().swap(&a, &b);
+                
+                Console.WriteLine("a: " + a + ", b" + b);
+                /**
+                Hello World!
+  				a: 10, b20
+				a: 20, b10
+
+                */
+            }
+        }
+}
+```
+
+> Threading
+
+
+
+> Keep Atomic
+
+```c#
+// class Interlocked :
+public static int Increment(ref int location);
+public static int Increment(ref long location); 
 ```
 

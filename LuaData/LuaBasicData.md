@@ -272,7 +272,5 @@ table.concat()
 require("module_name")
 require "module_name"
 -- 
-
-
 ```
 
