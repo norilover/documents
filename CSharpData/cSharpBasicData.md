@@ -752,49 +752,6 @@ public class TestCoroutine
 }
 ```
 
-* Event
-
-```c#
-public class EventManager : MonoBehaviour 
-{
-    public delegate void ClickAction();
-    public static event ClickAction OnClicked;
-
-
-    void OnGUI()
-    {
-        if(GUI.Button(new Rect(Screen.width / 2 - 50, 5, 100, 30), "Click"))
-        {
-            if(OnClicked != null)
-                OnClicked();
-        }
-    }
-}
-using UnityEngine;
-using System.Collections;
-
-public class TeleportScript : MonoBehaviour 
-{
-    void OnEnable()
-    {
-        EventManager.OnClicked += Teleport;
-    }
-
-
-    void OnDisable()
-    {
-        EventManager.OnClicked -= Teleport;
-    }
-
-
-    void Teleport()
-    {
-        Vector3 pos = transform.position;
-        pos.y = Random.Range(1.0f, 3.0f);
-        transform.position = pos;
-    }
-}
-```
 
 * Delegate
 ```c#
@@ -1051,22 +1008,81 @@ https://learn.unity.com/tutorial/attributes?uv=2019.3&projectId=5c88f2c1edbc2a00
 // to create a dynamic "broadcast" system using Events. 
 public class TestEvent
 {
-    private Delegate void MyDelegate();
-    
-    public static event MyDelegate MyDelegateTemp;
-    
+    ...Main(){
+        TurnSomething ts = new TurnSomething();
+        
+        // 0.event Action 简单调用
+        ts.OnEnable();
+        ts.OnExecute();
+        // 输出： Run TurnOne()
+        
+		ts.OnDisable();
+        ts.OnExecute();
+        // 输出： Please call OnEnable first
+        
+        
+        // 1.注意这里主要强调对于同一个类，不同的对象的同一个方法，在event Action类型中被看作不同的函数
+        TurnSomething ts0 = TurnSomething();
+        TurnSomething ts1 = TurnSomething();
+        
+        ts.OnEnableSelfFunc(ts0.TurnOne);
+        ts.OnExecute();
+        // 输出： Run TurnOne()
+        
+        ts.OnDisableSelfFunc(ts1.TurnOne);
+        ts.OnExecute();
+        // 输出： Run TurnOne()
+        
+        ts.OnDisableSelfFunc(ts0.TurnOne);
+        ts.OnExecute();
+        // 输出： Please call OnEnable first
+    }    
 }
 
 public class TurnSomething
 {
+    // private delegate void MyDelegate();
+    // public static event MyDelegate MyDelegateTemp;
+    
+    // 上面的其实相当于这个声名
+    public event Action myDelegateTemp;
+    
+    // 0.基本使用
     void OnEnable(){
-        TestEvent.MyDelegateTemp += TurnOne;
+        myDelegateTemp += TurnOne;
     }
     
     void OnDisable(){
-        TestEvent.MyDelegateTemp -= TurnOne;
+        myDelegateTemp -= TurnOne;
+    }
+    
+    void OnExecute(){
+        if(myDelegateTemp == null){
+            Console.WriteLine("Please call OnEnable first");
+            return;            
+        }
+        
+        myDelegateTemp();
+    }
+    
+    // 内部测试方法
+    void TurnOne(){
+        Console.WriteLine("Run TurnOne()");
+    }
+    
+    
+    // 1.添加自定义函数方法
+    // Note: 
+    void OnEnableSelfFunc(Action a){
+        myDelegateTemp += a;
+    }
+    
+    void OnDisableSelfFunc(Action a){
+        myDelegateTemp -= a;
     }
 }
+
+
 
 /*
 event 使用注意点:
@@ -1481,6 +1497,64 @@ yyyy	4 digit year	2007
         Console.WriteLine(iEnumerator.Current)
     }
 }
+```
+
+* 闭包问题
+
+```c#
+List<Func<int>> funcs = new List<Func<int>>();
+
+...main(){
+    // 先看这个可以输出什么结果
+    Func0();
+    
+    // 对比Fun0()的输出结果你有什么想法
+    Func1();
+}
+
+static void Func1(){
+    funcs.Clear();
+    for (int i = 0; i < 3; i++)
+    {
+        // 接受当前的i值
+        var ii = i;
+        
+        // 使用匿名函数返回ii对应的值
+        funcs.Add(() => { return ii; });
+    }
+    
+    foreach(var item in funcs)
+    {
+        Console.WriteLine(item().ToString());
+	}     
+    /*
+    输出：
+    	0
+    	1
+    	2
+    */
+}
+static void Func0(){
+    funcs.Clear();
+    for (int i = 0; i < 3; i++)
+    {
+        // 使用匿名函数返回i对应的值
+        funcs.Add(() => { return i; });
+    }
+    
+    foreach(var item in funcs)
+    {
+        Console.WriteLine(item().ToString());
+	}   
+    /*
+    输出：
+    	3
+    	3
+    	3
+    */
+}
+
+
 ```
 
 
@@ -2720,11 +2794,7 @@ class Program{
 }
 ```
 
-> Threading
-
-
-
-> Keep Atomic
+* Keep Atomic
 
 ```c#
 // class Interlocked :
